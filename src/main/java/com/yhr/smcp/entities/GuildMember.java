@@ -1,33 +1,46 @@
 package com.yhr.smcp.entities;
 
+import com.yhr.smcp.entities.character.Achievements;
+import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.PVPSummary;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "guild_members")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GuildMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String characterName;
-
+    private String name;
     @Column(nullable = false)
     private String realm;
 
-    private int guildRank;
+    private Integer guildRank;
     private String activeTitle;
     private String gender;
     private String faction;
     private String race;
     private String characterClass;
     private String activeSpecialization;
-    private Double achievementPoints;
     private Integer level;
+
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private MythicPlusProfile mythicPlusProfile;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private PVPSummary pvpSummary;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Achievements achievements;
 
 
 }
