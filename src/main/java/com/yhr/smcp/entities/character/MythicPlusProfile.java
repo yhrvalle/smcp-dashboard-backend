@@ -1,6 +1,6 @@
 package com.yhr.smcp.entities.character;
 
-import com.yhr.smcp.entities.mythic.MythicSeason;
+import com.yhr.smcp.entities.character.mythic.MythicSeason;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +17,9 @@ import java.util.TreeMap;
 public class MythicPlusProfile {
 
     private Double currentMythicRating;
-    private TreeMap<Character, Double> ratingColor; // red : valor
-    private List<String> seasonsURL;
+    private TreeMap<String, Double> ratingColor; // red : valor
+    @Builder.Default
+    private List<String> seasonsURL = new ArrayList<>();
+    @Builder.Default
     private List<MythicSeason> seasons = new ArrayList<>();
 }

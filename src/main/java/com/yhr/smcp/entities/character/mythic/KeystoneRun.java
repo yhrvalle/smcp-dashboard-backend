@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.mythic;
+package com.yhr.smcp.entities.character.mythic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +24,6 @@ public class KeystoneRun {
     // Dungeon Data
     private String dungeonName;
     private Boolean isTimed;
-    private TreeMap<Character, Double> ratingColor;
+    private TreeMap<String, Double> ratingColor;
     private Double dungeonMythicRating;
 }

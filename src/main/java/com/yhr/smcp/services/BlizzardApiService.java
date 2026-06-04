@@ -24,4 +24,20 @@ public class BlizzardApiService {
                 .retrieve()
                 .bodyToMono(String.class);
     }
+
+    public Mono<String> getMythicCharacterProfile(String realm, String characterName) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/profile/wow/character/{realm}/{characterName}/mythic-keystone-profile?namespace=profile-us",
+                        realm, characterName)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    public Mono<String> getDataByHref(String href) {
+        return blizzardWebClient.get()
+                .uri(href)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
 }
