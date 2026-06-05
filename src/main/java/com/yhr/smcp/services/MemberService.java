@@ -2,6 +2,9 @@ package com.yhr.smcp.services;
 
 import com.yhr.smcp.entities.GuildMember;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.mythic.KeystoneMember;
+import com.yhr.smcp.entities.character.mythic.KeystoneRun;
+import com.yhr.smcp.entities.character.mythic.MythicSeason;
 import com.yhr.smcp.repositories.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -38,6 +42,12 @@ public class MemberService {
 
         String mythicHref = root.get("mythic_keystone_profile").get("href").asString();
         MythicPlusProfile mythicPlusProfile = syncMythicPlusProfile(realm, characterName, mythicHref);
+        // PVPSummary = syncPVPSummary
+        // Achievments = syncAchievments
+        // Encounters = syncEncounters
+        // etc etc
+
+
         return GuildMember.builder()
                 .name(characterName)
                 .realm(realm)
@@ -52,87 +62,159 @@ public class MemberService {
     }
 
     private MythicPlusProfile syncMythicPlusProfile(String realm, String characterName, String href) {
-        String rawJson = blizzardApiService.getDataByHref(href)
-                .block();
-        JsonNode root = objectMapper.readTree(rawJson);
-        Double currentMythicRating = root.get("current_mythic_rating").get("rating").asDouble();
+        try {
 
-        TreeMap<String, Double> ratingColor = new TreeMap<>();
-        JsonNode colors = root.get("current_mythic_rating").get("color");
-        if (colors != null) {
-            for (JsonNode color : colors) {
-                ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
+            String rawJson = blizzardApiService.getDataByHref(href)
+                    .block();
+            JsonNode root = objectMapper.readTree(rawJson);
+            Double currentMythicRating = root.get("current_mythic_rating").get("rating").asDouble();
+
+            TreeMap<String, Double> ratingColor = new TreeMap<>();
+            JsonNode colors = root.get("current_mythic_rating").get("color");
+            if (colors != null) {
+                for (JsonNode color : colors) {
+                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
+                }
             }
+
+            List<String> seasonsURL = new ArrayList<>();
+            JsonNode seasons = root.get("seasons");
+            if (seasons != null) {
+                for (JsonNode season : seasons) {
+                    seasonsURL.add(season.get("key").get("href").asString());
+
+                }
+            }
+            List<MythicSeason> seasonList = fetchMythicSeasons(seasonsURL);
+            return MythicPlusProfile.builder()
+                    .currentMythicRating(currentMythicRating)
+                    .ratingColor(ratingColor)
+                    .seasonsURL(seasonsURL)
+                    .seasons(new ArrayList<>()) // vazia pq nem sei como vou fazer isso
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("faiou synca o mythic plus profile " + e.getMessage());
         }
 
-        List<String> seasonsURL = new ArrayList<>();
-        JsonNode seasons = root.get("seasons");
-        if (seasons != null) {
-            for (JsonNode season : seasons) {
-                seasonsURL.add(season.get("key").get("href").asString());
-            }
-        }
-
-
-
-        return MythicPlusProfile.builder()
-                .currentMythicRating(currentMythicRating)
-                .ratingColor(ratingColor)
-                .seasonsURL(seasonsURL)
-                .
-                .build();
     }
 
+    private List<MythicSeason> fetchMythicSeasons(List<String> seasonsURL) {
+        List<String> rawJsonList = blizzardApiService.getAllSeasons(seasonsURL).block();
+        return rawJsonList.stream()
+                .map(rawJson ->
+                {
+                    try {
+                        JsonNode root = objectMapper.readTree(rawJson);
+                        return parseSeason(root);
+                    } catch (Exception e) {
+                        throw new RuntimeException("faiou grabbar as season padrinho " + e.getMessage());
+                    }
+                })
+                .collect(Collectors.toList());
 
-//    private MythicPlusProfile parseMythicProfile(String rawJson) {
-//        try {
-//            JsonNode root = objectMapper.readTree(rawJson);
-//            Double currentMythicRating = root.get("current_mythic_rating").get("rating").asDouble();
-//            TreeMap<String, Double> ratingRGB = new TreeMap<>();
-//            JsonNode RatingColorNode = root.get("current_mythic_rating").get("colors");
-//            ratingRGB.put("r", RatingColorNode.get("r").asDouble());
-//            ratingRGB.put("g", RatingColorNode.get("g").asDouble());
-//            ratingRGB.put("b", RatingColorNode.get("b").asDouble());
-//            ratingRGB.put("a", RatingColorNode.get("a").asDouble());
-//
-//            List<String> seasonsURL = new ArrayList<>();
-//            List<MythicSeason> seasons = new ArrayList<>();
-//
-//            int currentSeasonId = -1;
-//            String currentSeasonURL = null;
-//            JsonNode seasonsNode = root.get("seasons");
-//            if (seasonsNode != null) {
-//                for (JsonNode season : seasonsNode) {
-//                    String seasonHref = season.get("key").get("href").asString(); // URL das seasons
-//                    int seasonId = season.get("id").asInt();
-//                    seasonsURL.add(seasonHref);
-//
-//                    if (seasonId > currentSeasonId) {
-//                        currentSeasonId = seasonId;
-//                        currentSeasonURL = seasonHref;
-//                    }
-//                }
-//            }
-//            MythicSeason currentMythicSeason = fetchCurrentSeason(currentSeasonURL);
-//
-//            return MythicPlusProfile.builder()
-//                    .currentMythicRating(currentMythicRating)
-//                    .ratingColor(ratingRGB)
-//                    .seasonsURL(seasonsURL)
-//
-//                    .build();
-//        } catch (Exception e) {
-//            throw new RuntimeException("faiou de pegar o mythic profile");
-//        }
-//    }
-//
-//    private MythicSeason fetchCurrentSeason(String href) {
-//        String rawJson = blizzardApiService.getSeasonByHref(href)
-//                .block();
-//        try {
-//            JsonNode root = objectMapper.readTree(rawJson);
-//
-//        }
-//
-//    }
+    }
+
+    private MythicSeason parseSeason(JsonNode season) {
+        try {
+            String seasonURL = season.get("season_url").get("key").get("href").asString();
+            String rawSeasonDataJson = blizzardApiService.getDataByHref(seasonURL).block();
+
+            JsonNode rootSeasonData = objectMapper.readTree(rawSeasonDataJson);
+            String seasonName = rootSeasonData.get("season_name").get("en_US").asString();
+            Double startTime = rootSeasonData.get("start_timestamp").asDouble();
+            Double endTime = rootSeasonData.get("end_timestamp").asDouble();
+
+            Double seasonRating = season.get("mythic_rating").get("rating").asDouble();
+
+            TreeMap<String, Double> ratingColor = new TreeMap<>();
+            JsonNode colors = season.get("mythic_rating").get("color");
+            if (colors != null) {
+                for (JsonNode color : colors) {
+                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
+                }
+            }
+
+            JsonNode bestRuns = season.path("best_runs");
+            List<KeystoneRun> keystoneRuns = new ArrayList<>();
+            if (bestRuns.isArray()) {
+                for (JsonNode run : bestRuns) {
+                    keystoneRuns.add(parseRun(run));
+                }
+            }
+
+            return MythicSeason.builder()
+                    .seasonName(seasonName)
+                    .seasonDataURL(seasonURL)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .bestRuns(keystoneRuns)
+                    .seasonRating(seasonRating)
+                    .ratingColor(ratingColor)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("faiou grabbar as season url " + e.getMessage());
+        }
+    }
+
+    private KeystoneRun parseRun(JsonNode run) {
+        try {
+            Double completedTimeStamp = run.get("completed_timestamp").asDouble();
+            Double runDuration = run.get("duration").asDouble();
+            Integer keystoneLevel = run.get("keystone_level").asInt();
+
+            JsonNode affixRoot = run.path("keystone_affixes");
+            List<String> affixesName = new ArrayList<>();
+            if (affixRoot.isArray()) {
+                for (JsonNode affix : affixRoot) {
+                    affixesName.add(affix.get("name").get("en_US").asString());
+                }
+            }
+
+            List<KeystoneMember> keystoneMembers = new ArrayList<>();
+            JsonNode members = run.path("members");
+            if (members.isArray()) {
+                for (JsonNode member : members) {
+                    keystoneMembers.add(parseRunMembers(member));
+                }
+            }
+
+            String dungeonName = run.get("dungeon").get("name").get("en_US").asString();
+            Boolean isTimed = run.get("is_completed_within_timer").asBoolean();
+            Double runRating = run.get("mythic_rating").get("rating").asDouble();
+
+            TreeMap<String, Double> ratingColor = new TreeMap<>();
+            JsonNode colors = run.get("mythic_rating").get("color");
+            if (colors != null) {
+                for (JsonNode color : colors) {
+                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
+                }
+            }
+
+            return KeystoneRun.builder()
+                    .completedTimestamp(completedTimeStamp)
+                    .duration(runDuration)
+                    .level(keystoneLevel)
+                    .affixesName(affixesName)
+                    .members(keystoneMembers)
+                    .dungeonName(dungeonName)
+                    .isTimed(isTimed)
+                    .ratingColor(ratingColor)
+                    .dungeonMythicRating(runRating)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("faiou popula as keystone run " + e.getMessage());
+        }
+
+    }
+
+    private KeystoneMember parseRunMembers(JsonNode member) {
+        try {
+            return KeystoneMember.builder()
+
+
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("faiou popula os membro " + e.getMessage());
+        }
+    }
 }

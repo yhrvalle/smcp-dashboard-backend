@@ -17,7 +17,7 @@ public class KeystoneRun {
     private Double completedTimestamp;
     private Double duration;
     private Integer level;
-    private String affixName;
+    private List<String> affixesName = new ArrayList<>();
 
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();
 

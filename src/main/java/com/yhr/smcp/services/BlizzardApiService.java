@@ -3,7 +3,10 @@ package com.yhr.smcp.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +41,15 @@ public class BlizzardApiService {
                 .uri(href)
                 .retrieve()
                 .bodyToMono(String.class);
+    }
+
+    public Mono<List<String>> getAllSeasons(List<String> seasonsURL) {
+        return Flux.fromIterable(seasonsURL)
+                .flatMap(href -> blizzardWebClient.get()
+                        .uri(href)
+                        .retrieve()
+                        .bodyToMono(String.class))
+                .collectList();
     }
 
 }
