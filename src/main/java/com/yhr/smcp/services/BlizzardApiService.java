@@ -43,8 +43,8 @@ public class BlizzardApiService {
                 .bodyToMono(String.class);
     }
 
-    public Mono<List<String>> getAllSeasons(List<String> seasonsURL) {
-        return Flux.fromIterable(seasonsURL)
+    public Mono<List<String>> getDataInParallel(List<String> hrefList) {
+        return Flux.fromIterable(hrefList)
                 .flatMap(href -> blizzardWebClient.get()
                         .uri(href)
                         .retrieve()

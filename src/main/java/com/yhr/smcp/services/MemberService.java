@@ -26,7 +26,6 @@ public class MemberService {
     private final BlizzardApiService blizzardApiService;
     private final ObjectMapper objectMapper;
 
-
     public GuildMember syncMember(String realm, String characterName) {
         String rawJson = blizzardApiService.getCharacter(realm, characterName)
                 .block();
@@ -47,8 +46,7 @@ public class MemberService {
         // Encounters = syncEncounters
         // etc etc
 
-
-        return GuildMember.builder()
+        GuildMember guildMember = GuildMember.builder()
                 .name(characterName)
                 .realm(realm)
                 .activeTitle(title)
@@ -58,30 +56,36 @@ public class MemberService {
                 .characterClass(characterClass)
                 .activeSpecialization(activeSpecialization)
                 .level(level)
+                .mythicPlusProfile(mythicPlusProfile)
                 .build();
+        // return memberRepository.save(guildMember);
+        return guildMember;
     }
 
     private MythicPlusProfile syncMythicPlusProfile(String realm, String characterName, String href) {
         try {
-
             String rawJson = blizzardApiService.getDataByHref(href)
                     .block();
             JsonNode root = objectMapper.readTree(rawJson);
-            Double currentMythicRating = root.get("current_mythic_rating").get("rating").asDouble();
+            Double currentMythicRating = root.path("current_mythic_rating").path("rating").asDouble();
 
             TreeMap<String, Double> ratingColor = new TreeMap<>();
-            JsonNode colors = root.get("current_mythic_rating").get("color");
-            if (colors != null) {
-                for (JsonNode color : colors) {
-                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
-                }
+            JsonNode colors = root.path("current_mythic_rating").path("color"); //TODO: fazer um metodo pra isso, repito 3x aqui
+            if (!colors.isMissingNode()) {
+                ratingColor.put("r", colors.path("r").asDouble());
+                ratingColor.put("g", colors.path("g").asDouble());
+                ratingColor.put("b", colors.path("b").asDouble());
+                ratingColor.put("a", colors.path("a").asDouble());
             }
 
             List<String> seasonsURL = new ArrayList<>();
-            JsonNode seasons = root.get("seasons");
-            if (seasons != null) {
+            JsonNode seasons = root.path("seasons");
+            if (!seasons.isMissingNode()) {
                 for (JsonNode season : seasons) {
-                    seasonsURL.add(season.get("key").get("href").asString());
+                    String seasonHref = season.path("key").path("href").asString();
+                    if (seasonHref != null && !seasonHref.isEmpty()) {
+                        seasonsURL.add(seasonHref);
+                    }
 
                 }
             }
@@ -90,19 +94,18 @@ public class MemberService {
                     .currentMythicRating(currentMythicRating)
                     .ratingColor(ratingColor)
                     .seasonsURL(seasonsURL)
-                    .seasons(new ArrayList<>()) // vazia pq nem sei como vou fazer isso
+                    .seasons(seasonList)
                     .build();
         } catch (Exception e) {
-            throw new RuntimeException("faiou synca o mythic plus profile " + e.getMessage());
+            throw new RuntimeException("faiou synca o mythic plus profile " + e.getMessage(), e);
         }
 
     }
 
     private List<MythicSeason> fetchMythicSeasons(List<String> seasonsURL) {
         List<String> rawJsonList = blizzardApiService.getAllSeasons(seasonsURL).block();
-        return rawJsonList.stream()
-                .map(rawJson ->
-                {
+        return rawJsonList.stream() //TODO: checar null
+                .map(rawJson -> {
                     try {
                         JsonNode root = objectMapper.readTree(rawJson);
                         return parseSeason(root);
@@ -116,24 +119,24 @@ public class MemberService {
 
     private MythicSeason parseSeason(JsonNode season) {
         try {
-            String seasonURL = season.get("season_url").get("key").get("href").asString();
+            String seasonURL = season.path("season").path("key").path("href").asString();
             String rawSeasonDataJson = blizzardApiService.getDataByHref(seasonURL).block();
 
             JsonNode rootSeasonData = objectMapper.readTree(rawSeasonDataJson);
-            String seasonName = rootSeasonData.get("season_name").get("en_US").asString();
-            Double startTime = rootSeasonData.get("start_timestamp").asDouble();
-            Double endTime = rootSeasonData.get("end_timestamp").asDouble();
+            String seasonName = rootSeasonData.path("season_name").path("en_US").asString();
+            Double startTime = rootSeasonData.path("start_timestamp").asDouble();
+            Double endTime = rootSeasonData.path("end_timestamp").asDouble();
 
-            Double seasonRating = season.get("mythic_rating").get("rating").asDouble();
+            Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
             TreeMap<String, Double> ratingColor = new TreeMap<>();
-            JsonNode colors = season.get("mythic_rating").get("color");
+            JsonNode colors = season.path("mythic_rating").path("color");
             if (colors != null) {
-                for (JsonNode color : colors) {
-                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
-                }
+                ratingColor.put("r", colors.path("r").asDouble());
+                ratingColor.put("g", colors.path("g").asDouble());
+                ratingColor.put("b", colors.path("b").asDouble());
+                ratingColor.put("a", colors.path("a").asDouble());
             }
-
             JsonNode bestRuns = season.path("best_runs");
             List<KeystoneRun> keystoneRuns = new ArrayList<>();
             if (bestRuns.isArray()) {
@@ -158,15 +161,15 @@ public class MemberService {
 
     private KeystoneRun parseRun(JsonNode run) {
         try {
-            Double completedTimeStamp = run.get("completed_timestamp").asDouble();
-            Double runDuration = run.get("duration").asDouble();
-            Integer keystoneLevel = run.get("keystone_level").asInt();
+            Double completedTimeStamp = run.path("completed_timestamp").asDouble();
+            Double runDuration = run.path("duration").asDouble();
+            Integer keystoneLevel = run.path("keystone_level").asInt();
 
             JsonNode affixRoot = run.path("keystone_affixes");
-            List<String> affixesName = new ArrayList<>();
+            List<String> affixesName = new ArrayList<>(); //TODO: metodo pra isso
             if (affixRoot.isArray()) {
                 for (JsonNode affix : affixRoot) {
-                    affixesName.add(affix.get("name").get("en_US").asString());
+                    affixesName.add(affix.path("name").path("en_US").asString());
                 }
             }
 
@@ -178,16 +181,17 @@ public class MemberService {
                 }
             }
 
-            String dungeonName = run.get("dungeon").get("name").get("en_US").asString();
-            Boolean isTimed = run.get("is_completed_within_timer").asBoolean();
-            Double runRating = run.get("mythic_rating").get("rating").asDouble();
+            String dungeonName = run.path("dungeon").path("name").path("en_US").asString();
+            Boolean isTimed = run.path("is_completed_within_timer").asBoolean();
+            Double runRating = run.path("mythic_rating").get("rating").asDouble();
 
             TreeMap<String, Double> ratingColor = new TreeMap<>();
-            JsonNode colors = run.get("mythic_rating").get("color");
+            JsonNode colors = run.path("mythic_rating").get("color");
             if (colors != null) {
-                for (JsonNode color : colors) {
-                    ratingColor.put(color.get(0).asString(), color.get(1).asDouble()); // ACHO que vai funfar
-                }
+                ratingColor.put("r", colors.path("r").asDouble());
+                ratingColor.put("g", colors.path("g").asDouble());
+                ratingColor.put("b", colors.path("b").asDouble());
+                ratingColor.put("a", colors.path("a").asDouble());
             }
 
             return KeystoneRun.builder()
@@ -209,12 +213,33 @@ public class MemberService {
 
     private KeystoneMember parseRunMembers(JsonNode member) {
         try {
+            String name = member.path("character").path("name").asString();
+            String realm = member.path("character").path("realm").path("slug").asString();
+            String spec = member.path("specialization").path("name").path("en_US").asString();
+            String race = member.path("race").path("name").path("en_US").asString();
+
+            String playableClassURL = member.path("specialization").path("key").path("href").asString();
+            JsonNode specializationDataRoot = objectMapper.readTree(blizzardApiService.getDataByHref(playableClassURL).block());
+            String playableClass = specializationDataRoot.path("playable_class").path("name").path("en_US").asString();
+
+            Double itemLevel = member.path("equipped_item_level").asDouble();
+
             return KeystoneMember.builder()
-
-
+                    .characterName(name)
+                    .realm(realm)
+                    .specializationName(spec)
+                    .playableClass(playableClass)
+                    .race(race)
+                    .itemLevel(itemLevel)
                     .build();
         } catch (Exception e) {
             throw new RuntimeException("faiou popula os membro " + e.getMessage());
         }
     }
+
+    public GuildMember getGuildMember(String realm, String characterName) {
+        return memberRepository.findByNameAndRealm(realm, characterName).orElse(null);
+    }
+
+
 }
