@@ -24,14 +24,13 @@ public class MythicSeasonParser {
             season.path("best_runs").forEach(run -> {
                 runs.add(keystoneRunParser.parse(run, specClassMap));
             });
-
             // esses campos está dentro de uma season url nao é o mesmo que esta as best runs
             //String seasonName = season.path("season_name").path("en_US").asString();
             //Double startTime = season.path("start_timestamp").asDouble();
             //Double endTime = season.path("end_timestamp").asDouble();
             Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
-            JsonNode colors = season.path("mythic_rating").get("color");
+            JsonNode colors = season.path("mythic_rating").path("color");
             TreeMap<String, Double> ratingColor = new TreeMap<>();
             ratingColor = RatingColors.ratingColorParserUtil(colors);
 

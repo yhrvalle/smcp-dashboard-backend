@@ -43,4 +43,6 @@ public class BlizzardApiController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+    
+
 }

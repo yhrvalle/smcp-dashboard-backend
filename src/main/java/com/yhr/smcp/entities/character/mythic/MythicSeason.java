@@ -15,8 +15,8 @@ import java.util.TreeMap;
 @AllArgsConstructor
 public class MythicSeason {
     private String seasonName;
-    private String seasonDataURL;
-    private Double startTime;
+    private String seasonDataURL; // TODO: ao inves de pegar a URL, pegar apenas o ID e get no DB local (que vou fazer ainda)
+    private Double startTime;     //     Assim essas infos não precisam ser requests a partir da Profile API (nested)
     private Double endTime;
     private List<KeystoneRun> bestRuns = new ArrayList<>();
     private Double seasonRating;
