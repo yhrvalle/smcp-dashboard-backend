@@ -1,4 +1,4 @@
-package com.yhr.smcp.services;
+package com.yhr.smcp.services.gamedata;
 
 import com.yhr.smcp.entities.gamedata.PlayableClass;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
@@ -6,6 +6,7 @@ import com.yhr.smcp.parsers.gamedata.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.PlayableSpecializationsParser;
 import com.yhr.smcp.repositories.gamedata.PlayableClassRepository;
 import com.yhr.smcp.repositories.gamedata.PlayableSpecializationRepository;
+import com.yhr.smcp.services.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GameDataService {
+public class PlayableClassDataService {
     private final PlayableClassRepository playableClassRepository;
     private final PlayableSpecializationRepository playableSpecializationRepository;
 

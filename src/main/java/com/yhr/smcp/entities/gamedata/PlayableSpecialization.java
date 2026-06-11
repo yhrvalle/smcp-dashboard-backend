@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Data
-@Table(name = "specialization")
+@Table(name = "tb_specializations")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayableSpecialization {

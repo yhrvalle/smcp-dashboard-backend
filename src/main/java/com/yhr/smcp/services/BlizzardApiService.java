@@ -61,11 +61,27 @@ public class BlizzardApiService {
                 .bodyToMono(String.class);
     }
 
-    // https://us.api.blizzard.com/data/wow/playable-class/7?namespace=static-us&locale=en_US
     public Mono<String> getPlayableClass(Integer classId) {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/playable-class/" + classId + "?namespace=static-us&locale=en_US")
                 .retrieve()
                 .bodyToMono(String.class);
     }
+
+
+    // -- M+ AFFIX --
+    public Mono<String> getAffixIndex() {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/keystone-affix/index?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    public Mono<String> getAffixDetails(Integer affixId) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/keystone-affix/" + affixId + "?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
 }
+

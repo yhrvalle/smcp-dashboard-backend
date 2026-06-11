@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Data
-@Table(name = "tb_classes")
+@Table(name = "tb_affixes")
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayableClass {
+public class KeystoneAffix {
     @Id
     private Integer id;
     private String name;
-
+    private String description;
 }

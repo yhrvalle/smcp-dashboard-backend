@@ -1,6 +1,6 @@
-package com.yhr.smcp.controllers;
+package com.yhr.smcp.controllers.gamedata;
 
-import com.yhr.smcp.services.GameDataService;
+import com.yhr.smcp.services.gamedata.PlayableClassDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/data")
-public class GameDataController {
+@RequestMapping(value = "/api/gamedata")
+public class PlayableClassDataController {
 
-    private final GameDataService gameDataService;
+    private final PlayableClassDataService playableClassDataService;
 
     @PostMapping("/sync-classes")
     public ResponseEntity<String> syncClasses() {
-        gameDataService.syncPlayableClasses();
+        playableClassDataService.syncPlayableClasses();
         return ResponseEntity.ok().build();
     }
 
