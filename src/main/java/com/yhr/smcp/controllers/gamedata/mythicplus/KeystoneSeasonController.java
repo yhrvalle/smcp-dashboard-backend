@@ -1,6 +1,6 @@
-package com.yhr.smcp.controllers.gamedata;
+package com.yhr.smcp.controllers.gamedata.mythicplus;
 
-import com.yhr.smcp.services.gamedata.KeystoneAffixService;
+import com.yhr.smcp.services.gamedata.KeystoneSeasonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/gamedata")
-public class KeystoneAffixController {
+public class KeystoneSeasonController {
+    private final KeystoneSeasonService keystoneSeasonService;
 
-    private final KeystoneAffixService keystoneAffixService;
-
-    @PostMapping("/sync-affixes")
-    public ResponseEntity<String> syncAffixes() {
-        keystoneAffixService.syncKeystoneAffixes();
+    @PostMapping("/sync-seasons")
+    public ResponseEntity<String> syncSeasons() {
+        keystoneSeasonService.syncMythicSeasons();
         return ResponseEntity.ok().build();
     }
 }

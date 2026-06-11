@@ -1,6 +1,6 @@
 package com.yhr.smcp.parsers.mythicplus;
 
-import com.yhr.smcp.entities.character.mythic.KeystoneMember;
+import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;

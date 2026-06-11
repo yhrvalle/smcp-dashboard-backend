@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.gamedata;
+package com.yhr.smcp.entities.gamedata.mythicplus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,15 +8,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Table(name = "tb_mythic_seasons")
 @Entity
 @Builder
 @Data
-@Table(name = "tb_affixes")
 @NoArgsConstructor
 @AllArgsConstructor
-public class KeystoneAffix {
+public class KeystoneSeason {
     @Id
     private Integer id;
+    private Double startTimestamp;
+    private Double endTimestamp;
     private String name;
-    private String description;
+
 }

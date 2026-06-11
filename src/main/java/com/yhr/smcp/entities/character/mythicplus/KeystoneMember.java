@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.character.mythic;
+package com.yhr.smcp.entities.character.mythicplus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

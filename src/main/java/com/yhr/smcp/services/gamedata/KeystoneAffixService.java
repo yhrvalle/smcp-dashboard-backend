@@ -1,8 +1,8 @@
 package com.yhr.smcp.services.gamedata;
 
-import com.yhr.smcp.entities.gamedata.KeystoneAffix;
-import com.yhr.smcp.parsers.gamedata.KeystoneAffixParser;
-import com.yhr.smcp.repositories.gamedata.KeystoneAffixRepository;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
+import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneAffixParser;
+import com.yhr.smcp.repositories.gamedata.mythicplus.KeystoneAffixRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

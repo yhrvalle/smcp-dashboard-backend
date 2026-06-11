@@ -1,6 +1,6 @@
-package com.yhr.smcp.parsers.gamedata;
+package com.yhr.smcp.parsers.gamedata.mythicplus;
 
-import com.yhr.smcp.entities.gamedata.KeystoneAffix;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
@@ -13,9 +13,9 @@ public class KeystoneAffixParser {
             String affixName = affixNode.path("name").asString();
             String affixDescription = affixNode.path("description").asString();
             return KeystoneAffix.builder()
-                    .affixId(affixId)
-                    .affixName(affixName)
-                    .affixDescription(affixDescription)
+                    .id(affixId)
+                    .name(affixName)
+                    .description(affixDescription)
                     .build();
         } catch (Exception e) {
             throw new BlizzardParsingException("KeystoneAffix", "name=" + affixNode.path("name").asString(), e);

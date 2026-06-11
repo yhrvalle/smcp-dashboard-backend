@@ -14,7 +14,7 @@ public class PlayableClassesParser {
 
             return PlayableClass.builder()
                     .id(classId)
-                    .className(name)
+                    .name(name)
                     .build();
         } catch (Exception e) {
             throw new BlizzardParsingException("PlayableClass", "name=" + classNode.path("name").asString(), e);

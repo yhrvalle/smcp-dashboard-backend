@@ -53,6 +53,9 @@ public class BlizzardApiService {
                 .collectList();
     }
 
+    //TODO: esses gets são mto parecidos para pegar o index -> details tentar procurar uma forma para fazer um mais generico
+    // ao inves de ficar quase repetindo
+
     // -- GAME DATA CLASSES AND SPECS --
     public Mono<String> getPlayableClassesIndex() {
         return blizzardWebClient.get()
@@ -80,6 +83,22 @@ public class BlizzardApiService {
     public Mono<String> getAffixDetails(Integer affixId) {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/keystone-affix/" + affixId + "?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    // -- M+ SEASON
+
+    public Mono<String> getSeasonIndex() {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    public Mono<String> getSeasonDetails(Integer seasonId) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/mythic-keystone/season/" + seasonId + "?namespace=dynamic-us&locale=en_US")
                 .retrieve()
                 .bodyToMono(String.class);
     }

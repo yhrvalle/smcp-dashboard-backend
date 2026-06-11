@@ -1,7 +1,7 @@
 package com.yhr.smcp.parsers.mythicplus;
 
-import com.yhr.smcp.entities.character.mythic.KeystoneRun;
-import com.yhr.smcp.entities.character.mythic.MythicSeason;
+import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
+import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;

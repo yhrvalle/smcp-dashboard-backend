@@ -1,6 +1,6 @@
 package com.yhr.smcp.entities.character;
 
-import com.yhr.smcp.entities.character.mythic.MythicSeason;
+import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
