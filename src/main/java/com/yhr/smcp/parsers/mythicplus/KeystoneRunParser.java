@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +27,25 @@ public class KeystoneRunParser {
                 members.add(keystoneMemberParser.parse(member, specClassMap));
             });
 
-            List<String> affixesNames = new ArrayList<>();
+            List<String> affixesNames = new ArrayList<>(); // TODO: FIXAR ISSO DE STRING PRA ENTIDADE
             run.path("affixes").forEach(affixes -> {
                 affixesNames.add(affixes.path("name").path("en_US").asString());
             });
 
-            Double completedTimestamp = run.path("completed_timestamp").asDouble();
-            Double runDuration = run.path("duration").asDouble();
+            long completedTimestampMilli = run.path("completed_timestamp").asLong();
+            long runDurationMilli = run.path("duration").asLong();
+
+            Instant completedTimestamp = Instant.ofEpochMilli(completedTimestampMilli);
+            Instant runDuration = Instant.ofEpochMilli(runDurationMilli); // esta errado n é uma data é duracao
+
+
             Integer keystoneLevel = run.path("keystone_level").asInt();
 
-            String dungeonName = run.path("dungeon_name").path("name").path("en_US").asString();
-            Boolean isTimed = run.path("is_completed_within_timer").asBoolean();
-            Double runRating = run.path("mythic_rating").asDouble();
+            String dungeonName = run.path("dungeon").path("name").asString();
+            Boolean isTimed = run.path("is_completed_within_time").asBoolean();
+            Double runRating = run.path("mythic_rating").path("rating").asDouble();
 
-            JsonNode colors = run.path("mythic_rating").path("colors");
+            JsonNode colors = run.path("mythic_rating").path("color");
             TreeMap<String, Double> colorsMap = new TreeMap<>();
             colorsMap = RatingColors.ratingColorParserUtil(colors);
 

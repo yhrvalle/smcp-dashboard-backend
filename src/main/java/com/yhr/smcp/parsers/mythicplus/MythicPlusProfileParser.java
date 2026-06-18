@@ -24,7 +24,7 @@ public class MythicPlusProfileParser {
         try {
             List<MythicSeason> mythicSeasons = new ArrayList<>();
             mythicSeasons = seasonNodes.stream()
-                    .map(season -> mythicSeasonParser.parse(season, specClassMap))
+                    .map(season -> mythicSeasonParser.parse(season, specClassMap, seasonMap))
                     .toList();
 
             Double currentMythicRating = profileRoot.path("current_mythic_rating")

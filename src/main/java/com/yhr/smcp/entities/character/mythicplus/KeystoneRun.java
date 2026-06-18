@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -15,8 +16,8 @@ import java.util.TreeMap;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KeystoneRun {
-    private Double completedTimestamp;
-    private Double duration;
+    private Instant completedTimestamp;
+    private Instant duration;
     private Integer level;
     private List<KeystoneAffix> affixesName = new ArrayList<>();
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();

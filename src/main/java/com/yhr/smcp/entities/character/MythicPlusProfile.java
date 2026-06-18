@@ -21,7 +21,7 @@ public class MythicPlusProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //BUG: ESTÁ NULL
 
     private Double currentMythicRating;
     private TreeMap<String, Double> ratingColor; // red : valor
