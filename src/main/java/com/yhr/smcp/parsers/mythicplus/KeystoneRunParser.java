@@ -2,6 +2,7 @@ package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
+import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.TreeMap;
 public class KeystoneRunParser {
     private final KeystoneMemberParser keystoneMemberParser;
 
-    public KeystoneRun parse(JsonNode run, Map<String, String> specClassMap) {
+    public KeystoneRun parse(JsonNode run, Map<Integer, PlayableSpecialization> specClassMap) {
         try {
             List<KeystoneMember> members = new ArrayList<>();
             run.path("members").forEach(member -> {
@@ -46,7 +47,7 @@ public class KeystoneRunParser {
                     .completedTimestamp(completedTimestamp)
                     .duration(runDuration)
                     .level(keystoneLevel)
-                    .affixesName(affixesNames)
+                    //.affixesName(affixesNames)
                     .members(members)
                     .dungeonName(dungeonName)
                     .isTimed(isTimed)

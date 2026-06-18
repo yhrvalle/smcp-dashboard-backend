@@ -1,6 +1,7 @@
 package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
+import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 @Component
 public class KeystoneMemberParser {
-    public KeystoneMember parse(JsonNode member, Map<String, String> specClassMap) {
+    public KeystoneMember parse(JsonNode member, Map<Integer, PlayableSpecialization> specClassMap) {
         try {
 
             String name = member.path("character").path("name").asString();
@@ -18,12 +19,12 @@ public class KeystoneMemberParser {
             String race = member.path("race").path("name").path("en_US").asString();
             Double itemLevel = member.path("equipped_item_level").asDouble();
             String specURL = member.path("specialization").path("key").path("href").asString();
-            String playableClass = specClassMap.getOrDefault(specURL, "Unknown");
+            //String playableClass = specClassMap.getOrDefault(specURL, "Unknown");
             return KeystoneMember.builder()
                     .characterName(name)
                     .realm(realm)
-                    .specializationName(spec)
-                    .playableClass(playableClass)
+                    //.specializationName(spec)
+                    //.playableClass(playableClass)
                     .race(race)
                     .itemLevel(itemLevel)
                     .build();

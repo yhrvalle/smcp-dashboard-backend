@@ -28,10 +28,22 @@ public class BlizzardApiService {
                 .bodyToMono(String.class);
     }
 
+    // -- MYTHIC PLUS --
     public Mono<String> getMythicCharacterProfile(String realm, String characterName) {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/profile/wow/character/{realm}/{characterName}/mythic-keystone-profile?namespace=profile-us",
-                        realm, characterName)
+                        realm.toLowerCase(),
+                        characterName.toLowerCase())
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    public Mono<String> getCharacterSeasonProfile(String realm, String characterName, Integer seasonId) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/profile/wow/character/{realm}/{name}/mythic-keystone-profile/season/{id}?namespace=profile-us&locale=en_US",
+                        realm.toLowerCase(),
+                        characterName.toLowerCase(),
+                        seasonId)
                 .retrieve()
                 .bodyToMono(String.class);
     }

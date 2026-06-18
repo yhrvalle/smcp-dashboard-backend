@@ -1,5 +1,7 @@
 package com.yhr.smcp.entities.character.mythicplus;
 
+import com.yhr.smcp.entities.gamedata.PlayableClass;
+import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +14,9 @@ import lombok.NoArgsConstructor;
 public class KeystoneMember {
     private String characterName;
     private String realm;
-    private String specializationName;
-    private String playableClass; // url dentro
-    private String race;
+    private PlayableSpecialization specializationName;
+    private PlayableClass playableClass;
+    private String race; // Colocar uma table de race?
     private Double itemLevel;
 
 }

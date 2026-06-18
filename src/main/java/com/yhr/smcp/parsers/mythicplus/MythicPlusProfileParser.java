@@ -2,6 +2,8 @@ package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.TreeMap;
 public class MythicPlusProfileParser {
     private final MythicSeasonParser mythicSeasonParser;
 
-    public MythicPlusProfile buildProfile(JsonNode profileRoot, List<JsonNode> seasonNodes, Map<String, String> specClassMap) {
+    public MythicPlusProfile buildProfile(JsonNode profileRoot, List<JsonNode> seasonNodes, Map<Integer, PlayableSpecialization> specClassMap, Map<Integer, KeystoneSeason> seasonMap) {
         try {
             List<MythicSeason> mythicSeasons = new ArrayList<>();
             mythicSeasons = seasonNodes.stream()

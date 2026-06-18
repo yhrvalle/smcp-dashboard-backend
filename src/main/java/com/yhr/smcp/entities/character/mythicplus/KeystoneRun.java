@@ -1,5 +1,6 @@
 package com.yhr.smcp.entities.character.mythicplus;
 
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,8 +18,7 @@ public class KeystoneRun {
     private Double completedTimestamp;
     private Double duration;
     private Integer level;
-    private List<String> affixesName = new ArrayList<>();
-
+    private List<KeystoneAffix> affixesName = new ArrayList<>();
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();
 
     // Dungeon Data

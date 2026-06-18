@@ -34,8 +34,7 @@ public class MemberService {
         String activeSpecialization = root.get("active_spec").get("name").asString();
         Integer level = root.get("level").asInt();
 
-        String mythicHref = root.get("mythic_keystone_profile").get("href").asString();
-        MythicPlusProfile mythicPlusProfile = mythicPlusService.syncProfile(mythicHref);
+        MythicPlusProfile mythicPlusProfile = mythicPlusService.syncProfile(characterName, realm);
         // PVPSummary = syncPVPSummary
         // Achievments = syncAchievments
         // Encounters = syncEncounters

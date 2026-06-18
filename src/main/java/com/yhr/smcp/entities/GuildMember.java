@@ -34,13 +34,8 @@ public class GuildMember {
     private String activeSpecialization;
     private Integer level;
 
-
-    @JdbcTypeCode(SqlTypes.JSON)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "mythic_plus_profile_id")
     private MythicPlusProfile mythicPlusProfile;
-    @JdbcTypeCode(SqlTypes.JSON)
-    private PVPSummary pvpSummary;
-    @JdbcTypeCode(SqlTypes.JSON)
-    private Achievements achievements;
-
 
 }

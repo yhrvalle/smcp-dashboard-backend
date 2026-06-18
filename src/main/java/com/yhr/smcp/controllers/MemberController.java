@@ -1,7 +1,9 @@
 package com.yhr.smcp.controllers;
 
 import com.yhr.smcp.entities.GuildMember;
+import com.yhr.smcp.entities.character.MythicPlusProfile;
 import com.yhr.smcp.services.MemberService;
+import com.yhr.smcp.services.MythicPlusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final MythicPlusService mythicPlusService;
 
     @PostMapping(value = "/{realm}/{characterName}/sync")
     public ResponseEntity<GuildMember> syncMember(
@@ -21,6 +24,14 @@ public class MemberController {
             @PathVariable String characterName) {
         GuildMember member = memberService.syncMember(realm, characterName);
         return ResponseEntity.ok(member);
+    }
+
+    @PostMapping(value = "mplus/{realm}/{characterName}/sync")
+    public ResponseEntity<MythicPlusProfile> syncMythicPlusProfile(
+            @PathVariable String realm,
+            @PathVariable String characterName) {
+        MythicPlusProfile profile = mythicPlusService.syncProfile(realm, characterName);
+        return ResponseEntity.ok(profile);
     }
 
 

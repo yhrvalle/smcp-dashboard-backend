@@ -2,6 +2,7 @@ package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
@@ -18,13 +19,14 @@ import java.util.TreeMap;
 public class MythicSeasonParser {
     private final KeystoneRunParser keystoneRunParser;
 
-    public MythicSeason parse(JsonNode season, Map<String, String> specClassMap) {
+    public MythicSeason parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap) {
         try {
             List<KeystoneRun> runs = new ArrayList<>();
             season.path("best_runs").forEach(run -> {
                 runs.add(keystoneRunParser.parse(run, specClassMap));
             });
             // esses campos está dentro de uma season url nao é o mesmo que esta as best runs
+            //TODO: pegar do banco de dados com o ID da season
             //String seasonName = season.path("season_name").path("en_US").asString();
             //Double startTime = season.path("start_timestamp").asDouble();
             //Double endTime = season.path("end_timestamp").asDouble();
