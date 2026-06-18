@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Table(name = "tb_mythic_seasons")
 @Entity
 @Builder
@@ -17,8 +19,8 @@ import lombok.NoArgsConstructor;
 public class KeystoneSeason {
     @Id
     private Integer id;
-    private Double startTimestamp;
-    private Double endTimestamp;
+    private Instant startTimestamp;
+    private Instant endTimestamp;
     private String name;
 
 }

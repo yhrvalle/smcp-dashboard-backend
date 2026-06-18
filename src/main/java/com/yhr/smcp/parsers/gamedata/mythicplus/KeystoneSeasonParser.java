@@ -5,13 +5,23 @@ import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
+import java.time.Instant;
+
 @Component
 public class KeystoneSeasonParser {
     public KeystoneSeason parse(JsonNode seasonNode) {
         try {
             Integer id = seasonNode.path("id").asInt();
-            Double startTimestamp = seasonNode.path("start_timestamp").asDouble();
-            Double endTimestamp = seasonNode.path("end_timestamp").asDouble();
+
+            long startMilliSeconds = seasonNode.path("start_timestamp").asLong(); // millisegundos do unix
+            Instant startTimestamp = Instant.ofEpochMilli(startMilliSeconds);
+
+            Instant endTimestamp = null;
+            if (!seasonNode.path("end_timestamp").isMissingNode()) {
+                long endMillisSeconds = seasonNode.path("end_timestamp").asLong();
+                endTimestamp = Instant.ofEpochMilli(endMillisSeconds);
+            }
+            
             String name = seasonNode.path("season_name").asString("blizzard api sucks and this field was null");
             return KeystoneSeason.builder()
                     .id(id)
