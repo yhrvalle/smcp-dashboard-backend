@@ -3,7 +3,9 @@ package com.yhr.smcp.parsers.mythicplus;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
+import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneAffixParser;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ import java.util.TreeMap;
 public class KeystoneRunParser {
     private final KeystoneMemberParser keystoneMemberParser;
 
+
     public KeystoneRun parse(JsonNode run, Map<Integer, PlayableSpecialization> specClassMap) {
         try {
             List<KeystoneMember> members = new ArrayList<>();
@@ -27,9 +30,9 @@ public class KeystoneRunParser {
                 members.add(keystoneMemberParser.parse(member, specClassMap));
             });
 
-            List<String> affixesNames = new ArrayList<>(); // TODO: FIXAR ISSO DE STRING PRA ENTIDADE
-            run.path("affixes").forEach(affixes -> {
-                affixesNames.add(affixes.path("name").path("en_US").asString());
+            List<KeystoneAffix> affixes = new ArrayList<>();
+            run.path("keystone_affixes").forEach(affix -> {
+
             });
 
             long completedTimestampMilli = run.path("completed_timestamp").asLong();
@@ -53,7 +56,7 @@ public class KeystoneRunParser {
                     .completedTimestamp(completedTimestamp)
                     .duration(runDuration)
                     .level(keystoneLevel)
-                    //.affixesName(affixesNames)
+                    .affixesName(affixes)
                     .members(members)
                     .dungeonName(dungeonName)
                     .isTimed(isTimed)

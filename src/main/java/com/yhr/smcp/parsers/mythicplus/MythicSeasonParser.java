@@ -44,8 +44,6 @@ public class MythicSeasonParser {
 
 
             return MythicSeason.builder()
-                    .id(id)
-                    .bestRuns(runs)
                     .seasonRating(seasonRating)
                     .ratingColor(ratingColor)
                     .build();

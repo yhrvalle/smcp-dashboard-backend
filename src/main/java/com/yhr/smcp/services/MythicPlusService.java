@@ -42,6 +42,7 @@ public class MythicPlusService {
             });
 
             // pegar os seasonIds e transformar em nodes dando fetch em cada season com esses ids
+            // isso aqui ta feio smelling
             List<JsonNode> seasonRootNodes = Flux.fromIterable(seasonIds)
                     .flatMap(id -> blizzardApiService.getCharacterSeasonProfile(realm, name, id)
                             .flatMap(raw -> {

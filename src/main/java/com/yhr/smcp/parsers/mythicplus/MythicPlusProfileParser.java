@@ -36,7 +36,6 @@ public class MythicPlusProfileParser {
             return MythicPlusProfile.builder()
                     .currentMythicRating(currentMythicRating)
                     .ratingColor(ratingColor)
-                    .seasons(mythicSeasons)
                     .build();
 
         } catch (BlizzardParsingException e) {

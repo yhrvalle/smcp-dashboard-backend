@@ -26,9 +26,6 @@ public class MythicPlusProfile {
     private Double currentMythicRating;
     private TreeMap<String, Double> ratingColor; // red : valor
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    private List<MythicSeason> seasons = new ArrayList<>();
-
     @OneToOne(mappedBy = "mythicPlusProfile")
     private GuildMember member;
 }

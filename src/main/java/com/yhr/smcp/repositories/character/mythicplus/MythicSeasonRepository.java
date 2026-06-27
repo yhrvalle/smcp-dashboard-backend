@@ -1,0 +1,12 @@
+package com.yhr.smcp.repositories.character.mythicplus;
+
+import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+public interface MythicSeasonRepository extends JpaRepository<MythicSeason, Long> {
+    Page<MythicSeason> findByProfileId(Long profileId, Pageable pageable);
+}
