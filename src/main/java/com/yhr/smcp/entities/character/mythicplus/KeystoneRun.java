@@ -33,7 +33,7 @@ public class KeystoneRun {
     private Instant completedTimestamp;
     private Instant duration;
     private Integer level;
-    private List<KeystoneAffix> affixesName = new ArrayList<>();
+    private List<KeystoneAffix> affixes = new ArrayList<>();
     @JdbcTypeCode(SqlTypes.JSON)
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();
 

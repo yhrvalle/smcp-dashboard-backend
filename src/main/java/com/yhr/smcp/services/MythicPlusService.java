@@ -3,9 +3,6 @@ package com.yhr.smcp.services;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.parsers.mythicplus.MythicPlusProfileParser;
 import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser;
 import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
@@ -21,7 +18,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -98,7 +94,8 @@ public class MythicPlusService {
                 log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getMember().getName());
                 continue;
             }
-            MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, lookups.specializationMap(), lookups.seasonMap());
+            MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, lookups.specializationMap(),
+                    lookups.seasonMap(), lookups.affixMap());
             MythicSeason season = result.mythicSeason();
             season.setProfile(profile);
             season = mythicSeasonRepository.save(season);

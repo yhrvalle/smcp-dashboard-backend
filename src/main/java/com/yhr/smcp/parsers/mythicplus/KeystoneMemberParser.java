@@ -16,12 +16,12 @@ public class KeystoneMemberParser {
 
             String name = member.path("character").path("name").asString();
             String realm = member.path("character").path("realm").path("slug").asString();
-            String race = member.path("race").path("name").path("en_US").asString();
+            String race = member.path("race").path("name").asString();
             Double itemLevel = member.path("equipped_item_level").asDouble();
             Integer specId = member.path("specialization").path("id").asInt();
 
             PlayableSpecialization specializationName = specClassMap.get(specId);
-            PlayableClass playableClass = specClassMap.get(specId).getPlayableClass();
+            PlayableClass playableClass = specializationName != null ? specializationName.getPlayableClass() : null;
 
             return KeystoneMember.builder()
                     .characterName(name)

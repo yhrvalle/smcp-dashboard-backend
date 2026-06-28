@@ -5,7 +5,6 @@ import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
-import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneAffixParser;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,8 @@ public class KeystoneRunParser {
     private final KeystoneMemberParser keystoneMemberParser;
 
 
-    public KeystoneRun parse(JsonNode run, Map<Integer, PlayableSpecialization> specClassMap) {
+    public KeystoneRun parse(JsonNode run, Map<Integer, PlayableSpecialization> specClassMap,
+                             Map<Integer, KeystoneAffix> keystoneAffixMap) {
         try {
             List<KeystoneMember> members = new ArrayList<>();
             run.path("members").forEach(member -> {
@@ -32,7 +32,14 @@ public class KeystoneRunParser {
 
             List<KeystoneAffix> affixes = new ArrayList<>();
             run.path("keystone_affixes").forEach(affix -> {
-
+                JsonNode affixId = affix.path("id");
+                if (affixId.isMissingNode()) {
+                    return;
+                }
+                KeystoneAffix keystoneAffix = keystoneAffixMap.get(affixId.asInt());
+                if (keystoneAffix != null) {
+                    affixes.add(keystoneAffix);
+                }
             });
 
             long completedTimestampMilli = run.path("completed_timestamp").asLong();
@@ -56,7 +63,7 @@ public class KeystoneRunParser {
                     .completedTimestamp(completedTimestamp)
                     .duration(runDuration)
                     .level(keystoneLevel)
-                    .affixesName(affixes)
+                    .affixes(affixes)
                     .members(members)
                     .dungeonName(dungeonName)
                     .isTimed(isTimed)

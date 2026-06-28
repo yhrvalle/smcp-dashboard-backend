@@ -3,6 +3,7 @@ package com.yhr.smcp.parsers.mythicplus;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
@@ -10,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +21,12 @@ import java.util.TreeMap;
 public class MythicSeasonParser {
     private final KeystoneRunParser keystoneRunParser;
 
-    public SeasonParserResult parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap, Map<Integer, KeystoneSeason> keystoneSeasonMap) {
+    public SeasonParserResult parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap,
+                                    Map<Integer, KeystoneSeason> keystoneSeasonMap, Map<Integer, KeystoneAffix> keystoneAffixMap) {
         try {
             List<KeystoneRun> runs = new ArrayList<>();
             season.path("best_runs").forEach(run -> {
-                runs.add(keystoneRunParser.parse(run, specClassMap));
+                runs.add(keystoneRunParser.parse(run, specClassMap, keystoneAffixMap));
             });
 
             Integer id = season.path("season").path("id").asInt();
