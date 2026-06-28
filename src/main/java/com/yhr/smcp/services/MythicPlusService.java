@@ -4,6 +4,7 @@ import com.yhr.smcp.entities.character.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.parsers.mythicplus.MythicPlusProfileParser;
 import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser;
@@ -43,12 +44,10 @@ public class MythicPlusService {
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
             List<JsonNode> seasonRootNodes = fetchSeasonNodes(realm, name, seasonIds);
 
-            Map<Integer, KeystoneSeason> keystoneSeasonMap = gameDataService.buildSeasonMap(seasonIds);
-            Map<Integer, PlayableSpecialization> specializationMap = gameDataService.buildSpecializationMap(seasonRootNodes);
-
+            GameDataFacadeService.GameDataLookup gameDataLookups = gameDataService.buildLookUps(seasonIds, seasonRootNodes);
             MythicPlusProfile profile = mythicPlusProfileParser.buildProfile(mythicProfileRoot);
             mythicPlusProfileRepository.save(profile);
-            saveProfileWithSeasons(seasonRootNodes, specializationMap, keystoneSeasonMap, profile);
+            saveProfileWithSeasons(seasonRootNodes, profile, gameDataLookups);
 
             return profile;
 
@@ -72,7 +71,7 @@ public class MythicPlusService {
     private List<Integer> extractSeasonsIds(JsonNode mythicProfileRoot) {
         List<Integer> seasonIds = new ArrayList<>();
         mythicProfileRoot.path("seasons").forEach((season) -> {
-            seasonIds.add(season.path("id").asInt());
+            seasonIds.add(season.path("season").path("id").asInt());
         });
         return seasonIds;
     }
@@ -92,12 +91,14 @@ public class MythicPlusService {
                 .toList();
     }
 
-    private void saveProfileWithSeasons(List<JsonNode> seasonsRootNodes, Map<Integer,
-                                                PlayableSpecialization> specializationMap, Map<Integer,
-                                                KeystoneSeason> keystoneSeasonMap,
-                                        MythicPlusProfile profile) {
+    private void saveProfileWithSeasons(List<JsonNode> seasonsRootNodes, MythicPlusProfile profile, GameDataFacadeService.GameDataLookup lookups) {
         for (JsonNode seasonNode : seasonsRootNodes) {
-            MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, specializationMap, keystoneSeasonMap);
+            Integer seasonId = seasonNode.path("seasons").path("id").asInt();
+            if (!lookups.seasonMap().containsKey(seasonId)) {
+                log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getMember().getName());
+                continue;
+            }
+            MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, lookups.specializationMap(), lookups.seasonMap());
             MythicSeason season = result.mythicSeason();
             season.setProfile(profile);
             season = mythicSeasonRepository.save(season);

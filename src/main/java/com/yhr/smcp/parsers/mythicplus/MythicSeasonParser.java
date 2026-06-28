@@ -28,25 +28,20 @@ public class MythicSeasonParser {
                 runs.add(keystoneRunParser.parse(run, specClassMap));
             });
 
-
             Integer id = season.path("season").path("id").asInt();
-            // TODO: essa parte aqui está meio estranha pq seria guardar 2 coisas iguais em lugares diferentes
-            //  keystoneSeason game data e aqui no perfil, talvez no front que faça esse JOIN TABLES se pá
-//            String name = keystoneSeasonMap.get(id).getName();
-//            Instant startTimestamp = keystoneSeasonMap.get(id).getStartTimestamp();
-//            Instant endTimestamp = keystoneSeasonMap.get(id).getEndTimestamp();
+            KeystoneSeason keystoneSeason = keystoneSeasonMap.get(id);
 
             Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
             JsonNode colors = season.path("mythic_rating").path("color");
-            TreeMap<String, Double> ratingColor = new TreeMap<>();
-            ratingColor = RatingColors.ratingColorParserUtil(colors);
+            TreeMap<String, Double> ratingColor = RatingColors.ratingColorParserUtil(colors);
 
-
-//            return MythicSeason.builder()
-//                    .seasonRating(seasonRating)
-//                    .ratingColor(ratingColor)
-//                    .build()
+            MythicSeason mythicSeason = MythicSeason.builder()
+                    .seasonRating(seasonRating)
+                    .ratingColor(ratingColor)
+                    .keystoneSeason(keystoneSeason)
+                    .build();
+            return new SeasonParserResult(mythicSeason, runs);
         } catch (BlizzardParsingException e) {
             throw e;
         } catch (Exception e) {
