@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class KeystoneRunQueryService {
     private final KeystoneRunRepository keystoneRunRepository;
 
-    public Page<KeystoneRun> getRunsBySeason(Long profileId, Pageable pageable) {
-        return keystoneRunRepository.findByMythicSeasonId(profileId, pageable);
+    public Page<KeystoneRun> getRunsBySeason(Long seasonId, Pageable pageable) {
+        return keystoneRunRepository.findByMythicSeasonId(seasonId, pageable);
     }
 }

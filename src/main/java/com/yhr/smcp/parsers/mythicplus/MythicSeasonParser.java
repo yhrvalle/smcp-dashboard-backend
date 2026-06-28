@@ -21,7 +21,7 @@ import java.util.TreeMap;
 public class MythicSeasonParser {
     private final KeystoneRunParser keystoneRunParser;
 
-    public MythicSeason parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap, Map<Integer, KeystoneSeason> keystoneSeasonMap) {
+    public SeasonParserResult parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap, Map<Integer, KeystoneSeason> keystoneSeasonMap) {
         try {
             List<KeystoneRun> runs = new ArrayList<>();
             season.path("best_runs").forEach(run -> {
@@ -43,15 +43,17 @@ public class MythicSeasonParser {
             ratingColor = RatingColors.ratingColorParserUtil(colors);
 
 
-            return MythicSeason.builder()
-                    .seasonRating(seasonRating)
-                    .ratingColor(ratingColor)
-                    .build();
-
+//            return MythicSeason.builder()
+//                    .seasonRating(seasonRating)
+//                    .ratingColor(ratingColor)
+//                    .build()
         } catch (BlizzardParsingException e) {
             throw e;
         } catch (Exception e) {
             throw new BlizzardParsingException("MythicSeason", "season=" + season.path("season").path("id").asString(), e);
         }
+    }
+
+    public record SeasonParserResult(MythicSeason mythicSeason, List<KeystoneRun> keystoneRuns) {
     }
 }

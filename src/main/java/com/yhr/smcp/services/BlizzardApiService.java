@@ -1,6 +1,7 @@
 package com.yhr.smcp.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -8,6 +9,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BlizzardApiService {
@@ -48,25 +50,19 @@ public class BlizzardApiService {
                 .bodyToMono(String.class);
     }
 
-    // -- DATA --
-    public Mono<String> getDataByHref(String href) {
-        return blizzardWebClient.get()
-                .uri(href)
-                .retrieve()
-                .bodyToMono(String.class);
-    }
-
-    public Mono<List<String>> getDataInParallel(List<String> hrefList) {
-        return Flux.fromIterable(hrefList)
-                .flatMapSequential(href -> blizzardWebClient.get()
-                        .uri(href)
-                        .retrieve()
-                        .bodyToMono(String.class))
-                .collectList();
-    }
-
     //TODO: esses gets são mto parecidos para pegar o index -> details tentar procurar uma forma para fazer um mais generico
     // ao inves de ficar quase repetindo
+
+    // -- MYTHIC PLUS PROFILE --
+    public Mono<List<String>> getCharacterSeasonsProfiles(String realm, String characterName, List<Integer> seasonsIds) {
+        return Flux.fromIterable(seasonsIds)
+                .flatMap(seasonId -> getCharacterSeasonProfile(realm, characterName, seasonId)
+                        .onErrorResume(error -> {
+                            log.error("BlizzardApiService - getCharacterSeasonProfiles failed to fetch season {}. value={}", seasonId, error.getMessage());
+                            return Mono.empty();
+                        }))
+                .collectList();
+    }
 
     // -- GAME DATA CLASSES AND SPECS --
     public Mono<String> getPlayableClassesIndex() {
