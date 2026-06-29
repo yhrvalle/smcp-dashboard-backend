@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Data
-@Table(name = "tb_classes")
+@Table(name = "tb_gamedata_classes")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayableClass {

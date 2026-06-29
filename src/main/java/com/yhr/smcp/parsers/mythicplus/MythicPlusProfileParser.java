@@ -6,8 +6,6 @@ import com.yhr.smcp.util.mythic.RatingColors;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
-import java.util.TreeMap;
-
 @Component
 public class MythicPlusProfileParser {
 
@@ -15,8 +13,8 @@ public class MythicPlusProfileParser {
         try {
             Double currentMythicRating = profileRoot.path("current_mythic_rating")
                     .path("rating").asDouble();
-            TreeMap<String, Double> ratingColor = new TreeMap<>();
-            ratingColor = RatingColors.ratingColorParserUtil(profileRoot.path("current_mythic_rating")
+
+            String ratingColor = RatingColors.ratingColorParserUtil(profileRoot.path("current_mythic_rating")
                     .path("color"));
 
             return MythicPlusProfile.builder()

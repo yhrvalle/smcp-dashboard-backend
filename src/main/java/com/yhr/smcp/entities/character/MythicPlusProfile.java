@@ -1,5 +1,6 @@
 package com.yhr.smcp.entities.character;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yhr.smcp.entities.GuildMember;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import jakarta.persistence.*;
@@ -21,11 +22,13 @@ public class MythicPlusProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //BUG: ESTÁ NULL
+    private Long id;
 
     private Double currentMythicRating;
-    private TreeMap<String, Double> ratingColor; // red : valor
+
+    private String ratingColor;
 
     @OneToOne(mappedBy = "mythicPlusProfile")
-    private GuildMember member;
+    @JsonIgnore
+    private GuildMember member; // Irá causar loop, TODO: Criar DTO's
 }

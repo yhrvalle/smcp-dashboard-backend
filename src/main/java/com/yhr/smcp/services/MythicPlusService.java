@@ -47,6 +47,7 @@ public class MythicPlusService {
 
             return profile;
 
+
         } catch (Exception e) {
             log.error("Error syncing mythic profile name={}, value={}", name, e.getMessage());
             throw new RuntimeException("MythicPlusService: failed to sync mythic plus profile: " + e.getMessage(), e);
@@ -67,7 +68,7 @@ public class MythicPlusService {
     private List<Integer> extractSeasonsIds(JsonNode mythicProfileRoot) {
         List<Integer> seasonIds = new ArrayList<>();
         mythicProfileRoot.path("seasons").forEach((season) -> {
-            seasonIds.add(season.path("season").path("id").asInt());
+            seasonIds.add(season.path("id").asInt());
         });
         return seasonIds;
     }
@@ -89,7 +90,7 @@ public class MythicPlusService {
 
     private void saveProfileWithSeasons(List<JsonNode> seasonsRootNodes, MythicPlusProfile profile, GameDataFacadeService.GameDataLookup lookups) {
         for (JsonNode seasonNode : seasonsRootNodes) {
-            Integer seasonId = seasonNode.path("seasons").path("id").asInt();
+            Integer seasonId = seasonNode.path("season").path("id").asInt();
             if (!lookups.seasonMap().containsKey(seasonId)) {
                 log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getMember().getName());
                 continue;

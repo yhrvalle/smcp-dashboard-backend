@@ -16,7 +16,7 @@ public class KeystoneMember {
     private String realm;
     private PlayableSpecialization specializationName;
     private PlayableClass playableClass;
-    private String race; // Colocar uma table de race?
+    private String race;
     private Double itemLevel;
 
 }

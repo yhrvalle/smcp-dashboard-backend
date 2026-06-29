@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Data
-@Table(name = "tb_affixes")
+@Table(name = "tb_gamedata_affixes")
 @NoArgsConstructor
 @AllArgsConstructor
 public class KeystoneAffix {

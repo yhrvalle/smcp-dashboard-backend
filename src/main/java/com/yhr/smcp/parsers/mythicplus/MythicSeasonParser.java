@@ -35,7 +35,7 @@ public class MythicSeasonParser {
             Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
             JsonNode colors = season.path("mythic_rating").path("color");
-            TreeMap<String, Double> ratingColor = RatingColors.ratingColorParserUtil(colors);
+            String ratingColor = RatingColors.ratingColorParserUtil(colors);
 
             MythicSeason mythicSeason = MythicSeason.builder()
                     .seasonRating(seasonRating)

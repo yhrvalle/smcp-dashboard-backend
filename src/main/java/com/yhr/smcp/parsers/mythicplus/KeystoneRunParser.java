@@ -56,8 +56,8 @@ public class KeystoneRunParser {
             Double runRating = run.path("mythic_rating").path("rating").asDouble();
 
             JsonNode colors = run.path("mythic_rating").path("color");
-            TreeMap<String, Double> colorsMap = new TreeMap<>();
-            colorsMap = RatingColors.ratingColorParserUtil(colors);
+
+            String ratingColors = RatingColors.ratingColorParserUtil(colors);
 
             return KeystoneRun.builder()
                     .completedTimestamp(completedTimestamp)
@@ -67,7 +67,7 @@ public class KeystoneRunParser {
                     .members(members)
                     .dungeonName(dungeonName)
                     .isTimed(isTimed)
-                    .ratingColor(colorsMap)
+                    .ratingColor(ratingColors)
                     .dungeonMythicRating(runRating)
                     .build();
 

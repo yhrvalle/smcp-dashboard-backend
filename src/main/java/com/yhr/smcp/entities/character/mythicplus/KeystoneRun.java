@@ -33,13 +33,21 @@ public class KeystoneRun {
     private Instant completedTimestamp;
     private Instant duration;
     private Integer level;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tb_mythic_run_affixes",
+            joinColumns = @JoinColumn(name = "keystone_run_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "affixes_id", nullable = false)
+    )
     private List<KeystoneAffix> affixes = new ArrayList<>();
+
     @JdbcTypeCode(SqlTypes.JSON)
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();
 
     // Dungeon Data
     private String dungeonName;
     private Boolean isTimed;
-    private TreeMap<String, Double> ratingColor;
+    private String ratingColor;
     private Double dungeonMythicRating;
 }

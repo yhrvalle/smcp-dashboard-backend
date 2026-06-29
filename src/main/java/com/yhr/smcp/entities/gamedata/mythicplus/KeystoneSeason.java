@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-@Table(name = "tb_mythic_seasons")
+@Table(name = "tb_gamedata_keystone_seasons")
 @Entity
 @Builder
 @Data
