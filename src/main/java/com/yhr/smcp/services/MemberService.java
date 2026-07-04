@@ -26,6 +26,7 @@ public class MemberService {
         JsonNode root = objectMapper.readTree(rawJson);
         // como pegar o guildRank sem sofrer
         // tacar isso num parser
+        // trocar para .path
         String title = root.get("active_title").get("name").asString();
         String gender = root.get("gender").get("name").asString();
         String faction = root.get("faction").get("name").asString();

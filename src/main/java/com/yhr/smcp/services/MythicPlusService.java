@@ -9,9 +9,11 @@ import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicPlusProfileRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
 import com.yhr.smcp.services.gamedata.GameDataFacadeService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -34,6 +36,7 @@ public class MythicPlusService {
     private final MythicSeasonRepository mythicSeasonRepository;
     private final KeystoneRunRepository keystoneRunRepository;
 
+    @Transactional
     public MythicPlusProfile syncProfile(String realm, String name) {
         try {
             JsonNode mythicProfileRoot = fetchMythicProfileRoot(realm, name);
@@ -92,7 +95,7 @@ public class MythicPlusService {
         for (JsonNode seasonNode : seasonsRootNodes) {
             Integer seasonId = seasonNode.path("season").path("id").asInt();
             if (!lookups.seasonMap().containsKey(seasonId)) {
-                log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getMember().getName());
+                log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getId());
                 continue;
             }
             MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, lookups.specializationMap(),
