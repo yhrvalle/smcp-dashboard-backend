@@ -27,6 +27,9 @@ public class KeystoneAffixService {
             JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
             indexRoot.path("affixes").forEach(affix -> {
                 Integer affixId = affix.path("id").asInt();
+                if (keystoneAffixRepository.existsById(affixId)) {
+                    return;
+                }
                 String affixDetailsJson = blizzardApiService.getAffixDetails(affixId).block();
                 JsonNode affixRoot = objectMapper.readTree(affixDetailsJson);
                 KeystoneAffix keystoneAffix = keystoneAffixParser.parse(affixRoot);

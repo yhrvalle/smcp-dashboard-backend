@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 @Getter
 @Setter
 @Entity
-@Table(name = "tb_members")
+@Table(name = "tb_guild_members")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
