@@ -1,6 +1,6 @@
 package com.yhr.smcp.controllers.gamedata.mythicplus;
 
-import com.yhr.smcp.services.gamedata.KeystoneSeasonService;
+import com.yhr.smcp.services.gamedata.KeystoneSeasonDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/gamedata")
 public class KeystoneSeasonController {
-    private final KeystoneSeasonService keystoneSeasonService;
+    private final KeystoneSeasonDataService keystoneSeasonDataService;
 
     @PostMapping("/sync-seasons")
     public ResponseEntity<String> syncSeasons() {
-        keystoneSeasonService.syncMythicSeasons();
+        keystoneSeasonDataService.syncMythicSeasons();
         return ResponseEntity.ok().build();
     }
 }

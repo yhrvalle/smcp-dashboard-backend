@@ -14,7 +14,7 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KeystoneAffixService {
+public class KeystoneAffixDataService {
     private final KeystoneAffixRepository keystoneAffixRepository;
     private final KeystoneAffixParser keystoneAffixParser;
     private final BlizzardApiService blizzardApiService;

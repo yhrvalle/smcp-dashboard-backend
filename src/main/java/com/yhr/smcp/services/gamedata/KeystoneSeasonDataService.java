@@ -1,6 +1,5 @@
 package com.yhr.smcp.services.gamedata;
 
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneSeasonParser;
 import com.yhr.smcp.repositories.gamedata.mythicplus.KeystoneSeasonsRepository;
@@ -14,7 +13,7 @@ import tools.jackson.databind.ObjectMapper;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KeystoneSeasonService {
+public class KeystoneSeasonDataService {
     private final KeystoneSeasonsRepository keystoneSeasonsRepository;
     private final BlizzardApiService blizzardApiService;
     private final KeystoneSeasonParser keystoneSeasonParser;
@@ -36,7 +35,7 @@ public class KeystoneSeasonService {
 
             });
         } catch (Exception e) {
-            throw new RuntimeException("KeystoneSeasonService syncMythicSeasons error " + e.getMessage(), e);
+            throw new RuntimeException("KeystoneSeasonDataService syncMythicSeasons error " + e.getMessage(), e);
         }
     }
 

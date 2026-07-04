@@ -1,6 +1,6 @@
 package com.yhr.smcp.scheduler.gamedata;
 
-import com.yhr.smcp.services.gamedata.KeystoneAffixService;
+import com.yhr.smcp.services.gamedata.KeystoneAffixDataService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +11,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class AffixDataSyncScheduler {
-    private final KeystoneAffixService keystoneAffixService;
+    private final KeystoneAffixDataService keystoneAffixDataService;
 
     @PostConstruct
     public void syncOnStartup() {
         log.info("AffixDataSyncScheduler - running startup sync");
-        keystoneAffixService.syncKeystoneAffixes();
+        keystoneAffixDataService.syncKeystoneAffixes();
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
     public void scheduledAffixDataSync() {
         log.info("AffixDataSyncScheduler - running scheduled sync");
-        keystoneAffixService.syncKeystoneAffixes();
+        keystoneAffixDataService.syncKeystoneAffixes();
     }
 
 }

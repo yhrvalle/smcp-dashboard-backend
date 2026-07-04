@@ -1,6 +1,5 @@
 package com.yhr.smcp.services.gamedata;
 
-import com.yhr.smcp.entities.gamedata.PlayableClass;
 import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
@@ -15,9 +14,9 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class GameDataFacadeService {
-    private final KeystoneSeasonService keystoneSeasonService;
+    private final KeystoneSeasonDataService keystoneSeasonDataService;
     private final PlayableClassDataService playableClassDataService;
-    private final KeystoneAffixService keystoneAffixService;
+    private final KeystoneAffixDataService keystoneAffixDataService;
 
     private Map<Integer, KeystoneAffix> buildKeystoneAffixMap(List<JsonNode> seasonRoot) {
         Set<Integer> affixSet = new HashSet<>();
@@ -35,7 +34,7 @@ public class GameDataFacadeService {
 
         Map<Integer, KeystoneAffix> map = new HashMap<>();
         for (Integer affixId : affixSet) {
-            KeystoneAffix keystoneAffix = keystoneAffixService.findKeystoneAffixById(affixId);
+            KeystoneAffix keystoneAffix = keystoneAffixDataService.findKeystoneAffixById(affixId);
             if (keystoneAffix == null) {
                 log.warn("Affix {} not found in database", affixId);
             } else {
@@ -48,7 +47,7 @@ public class GameDataFacadeService {
     private Map<Integer, KeystoneSeason> buildSeasonMap(List<Integer> seasonIds) {
         Map<Integer, KeystoneSeason> seasonMap = new HashMap<>();
         for (Integer seasonId : seasonIds) {
-            KeystoneSeason keystoneSeason = keystoneSeasonService.findKeystoneSeasonById(seasonId);
+            KeystoneSeason keystoneSeason = keystoneSeasonDataService.findKeystoneSeasonById(seasonId);
             if (keystoneSeason == null) {
                 log.warn("Season {} not found in database.", seasonId);
             } else {

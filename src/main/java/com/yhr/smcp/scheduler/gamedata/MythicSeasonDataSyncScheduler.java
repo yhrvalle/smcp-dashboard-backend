@@ -1,6 +1,6 @@
 package com.yhr.smcp.scheduler.gamedata;
 
-import com.yhr.smcp.services.gamedata.KeystoneSeasonService;
+import com.yhr.smcp.services.gamedata.KeystoneSeasonDataService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class MythicSeasonDataSyncScheduler {
-    private final KeystoneSeasonService keystoneSeasonService;
+    private final KeystoneSeasonDataService keystoneSeasonDataService;
 
     @PostConstruct
     public void syncOnStartup() {
         log.info("MythicSeasonDataSyncScheduler - run on startup");
-        keystoneSeasonService.syncMythicSeasons();
+        keystoneSeasonDataService.syncMythicSeasons();
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
     public void scheduledMythicSeasonDataSync() {
         log.info("MythicSeasonDataSyncScheduler - running scheduled sync");
-        keystoneSeasonService.syncMythicSeasons();
+        keystoneSeasonDataService.syncMythicSeasons();
     }
 }
