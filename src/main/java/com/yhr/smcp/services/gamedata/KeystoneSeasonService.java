@@ -26,14 +26,14 @@ public class KeystoneSeasonService {
             JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
             indexRoot.path("seasons").forEach(season -> {
                 Integer seasonId = season.path("id").asInt();
-                try {
-                    String seasonDetailsJson = blizzardApiService.getSeasonDetails(seasonId).block();
-                    JsonNode seasonRoot = objectMapper.readTree(seasonDetailsJson);
-                    KeystoneSeason keystoneSeason = keystoneSeasonParser.parse(seasonRoot);
-                    keystoneSeasonsRepository.save(keystoneSeason);
-                } catch (Exception e) {
-                    log.error("Error syncing season {}: {}", seasonId, e.getMessage());
+                if (keystoneSeasonsRepository.existsById(seasonId)) {
+                    return;
                 }
+                String seasonDetailsJson = blizzardApiService.getSeasonDetails(seasonId).block();
+                JsonNode seasonRoot = objectMapper.readTree(seasonDetailsJson);
+                KeystoneSeason keystoneSeason = keystoneSeasonParser.parse(seasonRoot);
+                keystoneSeasonsRepository.save(keystoneSeason);
+
             });
         } catch (Exception e) {
             throw new RuntimeException("KeystoneSeasonService syncMythicSeasons error " + e.getMessage(), e);

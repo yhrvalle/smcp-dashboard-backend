@@ -36,6 +36,9 @@ public class PlayableClassDataService {
             JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
             indexRoot.path("classes").forEach(classNode -> {
                 Integer classId = classNode.path("id").asInt();
+                if (playableClassRepository.existsById(classId)) {
+                    return;
+                }
                 String classDetailsJson = blizzardApiService.getPlayableClass(classId).block();
                 JsonNode detailsRoot = objectMapper.readTree(classDetailsJson);
 

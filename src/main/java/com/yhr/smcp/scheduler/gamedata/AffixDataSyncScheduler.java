@@ -20,7 +20,7 @@ public class AffixDataSyncScheduler {
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledAffixSync() {
+    public void scheduledAffixDataSync() {
         log.info("AffixDataSyncScheduler - running scheduled sync");
         keystoneAffixService.syncKeystoneAffixes();
     }
