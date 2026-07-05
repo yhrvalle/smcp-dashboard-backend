@@ -7,6 +7,7 @@ public record KeystoneRunDetailResponseDTO(
         Long id,
         String dungeonName,
         Integer level,
+        Double dungeonMythicRating,
         Boolean isTimed,
         String ratingColorHex,
         Instant completedTimestamp,

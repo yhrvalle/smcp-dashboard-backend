@@ -20,13 +20,13 @@ public class KeystoneMemberParser {
             Double itemLevel = member.path("equipped_item_level").asDouble();
             Integer specId = member.path("specialization").path("id").asInt();
 
-            PlayableSpecialization specializationName = specClassMap.get(specId);
-            PlayableClass playableClass = specializationName != null ? specializationName.getPlayableClass() : null;
+            PlayableSpecialization playableSpecialization = specClassMap.get(specId);
+            PlayableClass playableClass = playableSpecialization != null ? playableSpecialization.getPlayableClass() : null; //BUG: ? é realmente quero retornar null?
 
             return KeystoneMember.builder()
                     .characterName(name)
                     .realm(realm)
-                    .specializationName(specializationName)
+                    .playableSpecialization(playableSpecialization)
                     .playableClass(playableClass)
                     .race(race)
                     .itemLevel(itemLevel)

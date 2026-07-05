@@ -52,6 +52,7 @@ public class BlizzardApiService {
 
     //TODO: esses gets são mto parecidos para pegar o index -> details tentar procurar uma forma para fazer um mais generico
     // ao inves de ficar quase repetindo
+    // TODO: refactor para ser paralelo n sequencial
 
     // -- MYTHIC PLUS PROFILE --
     public Mono<List<String>> getCharacterSeasonsProfiles(String realm, String characterName, List<Integer> seasonsIds) {

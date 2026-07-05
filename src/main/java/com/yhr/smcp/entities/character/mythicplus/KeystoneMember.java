@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class KeystoneMember {
     private String characterName;
     private String realm;
-    private PlayableSpecialization specializationName;
+    private PlayableSpecialization playableSpecialization;
     private PlayableClass playableClass;
     private String race;
     private Double itemLevel;

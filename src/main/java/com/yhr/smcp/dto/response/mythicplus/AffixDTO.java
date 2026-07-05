@@ -1,7 +1,7 @@
 package com.yhr.smcp.dto.response.mythicplus;
 
 public record AffixDTO(
-        Long id,
+        Integer id,
         String name,
         String description
 ) {
