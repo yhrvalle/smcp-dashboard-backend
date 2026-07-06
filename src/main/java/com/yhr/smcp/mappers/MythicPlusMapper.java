@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MythicPlusMapper {
 
-    public static MythicPlusProfileResponseDTO toProfileDTO(MythicPlusProfile mythicPlusProfile) {
+    public static MythicPlusProfileResponseDTO buildMythicPlusProfileDTO(MythicPlusProfile mythicPlusProfile) {
         return new MythicPlusProfileResponseDTO(
                 mythicPlusProfile.getId(),
                 mythicPlusProfile.getCurrentMythicRating(),
@@ -18,7 +18,7 @@ public class MythicPlusMapper {
         );
     }
 
-    public static MythicSeasonResponseDTO toSeasonDTO(MythicSeason mythicSeason) {
+    public static MythicSeasonResponseDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
         return new MythicSeasonResponseDTO(
                 mythicSeason.getId(),
                 mythicSeason.getSeasonRating(),
@@ -29,7 +29,7 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunResponseDTO toKeystoneRunDTO(KeystoneRun keystoneRun) {
+    public static KeystoneRunResponseDTO buildKeystoneRunDTO(KeystoneRun keystoneRun) {
         List<AffixDTO> affixes = getAffixDTOS(keystoneRun);
         return new KeystoneRunResponseDTO(
                 keystoneRun.getId(),
@@ -44,7 +44,7 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunDetailResponseDTO toKeystoneRunDetailDTO(KeystoneRun keystoneRun) {
+    public static KeystoneRunDetailResponseDTO buildKeystoneRunDetailDTO(KeystoneRun keystoneRun) {
         List<AffixDTO> affixes = getAffixDTOS(keystoneRun);
         List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> members = getMembersDTOS(keystoneRun);
         return new KeystoneRunDetailResponseDTO(
