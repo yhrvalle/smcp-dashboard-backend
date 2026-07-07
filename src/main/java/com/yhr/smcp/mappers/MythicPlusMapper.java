@@ -1,7 +1,7 @@
 package com.yhr.smcp.mappers;
 
 import com.yhr.smcp.dto.response.mythicplus.*;
-import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import org.jspecify.annotations.NonNull;

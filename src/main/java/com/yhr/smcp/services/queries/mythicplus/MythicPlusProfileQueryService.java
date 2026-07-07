@@ -1,7 +1,7 @@
 package com.yhr.smcp.services.queries.mythicplus;
 
 import com.yhr.smcp.dto.response.mythicplus.MythicPlusProfileResponseDTO;
-import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.mappers.MythicPlusMapper;
 import com.yhr.smcp.repositories.character.mythicplus.MythicPlusProfileRepository;
 import lombok.RequiredArgsConstructor;

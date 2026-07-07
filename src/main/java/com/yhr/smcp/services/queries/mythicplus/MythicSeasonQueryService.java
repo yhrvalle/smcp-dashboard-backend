@@ -1,7 +1,6 @@
 package com.yhr.smcp.services.queries.mythicplus;
 
 import com.yhr.smcp.dto.response.mythicplus.MythicSeasonResponseDTO;
-import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import com.yhr.smcp.mappers.MythicPlusMapper;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
 import lombok.RequiredArgsConstructor;

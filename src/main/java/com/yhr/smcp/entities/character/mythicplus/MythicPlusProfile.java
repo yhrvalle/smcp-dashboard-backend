@@ -1,7 +1,5 @@
-package com.yhr.smcp.entities.character;
+package com.yhr.smcp.entities.character.mythicplus;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.yhr.smcp.entities.guild.GuildMember;
 import jakarta.persistence.*;
 import lombok.*;
 

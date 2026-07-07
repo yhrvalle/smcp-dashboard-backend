@@ -12,7 +12,6 @@ import org.hibernate.type.SqlTypes;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 @Entity
 @Table(name = "tb_mythic_runs")

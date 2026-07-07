@@ -1,6 +1,6 @@
 package com.yhr.smcp.parsers.mythicplus;
 
-import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import org.springframework.stereotype.Component;

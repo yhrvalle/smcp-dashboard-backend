@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.character;
+package com.yhr.smcp.entities.character.encounters;
 
 public class EncounterProfile {
 

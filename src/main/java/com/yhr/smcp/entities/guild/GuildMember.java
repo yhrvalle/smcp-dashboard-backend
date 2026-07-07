@@ -1,6 +1,6 @@
 package com.yhr.smcp.entities.guild;
 
-import com.yhr.smcp.entities.character.MythicPlusProfile;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,16 +26,9 @@ public class GuildMember {
     private String realm;
 
     private Integer guildRank;
-    private String activeTitle;
-    private String gender;
-    private String faction;
     private Integer raceId;
     private Integer classId;
-    private Integer activeSpecializationId;
     private Integer level;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "mythic_plus_profile_id")
-    private MythicPlusProfile mythicPlusProfile;
 
 }
