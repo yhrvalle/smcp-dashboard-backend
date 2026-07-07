@@ -1,12 +1,8 @@
-package com.yhr.smcp.entities;
+package com.yhr.smcp.entities.guild;
 
-import com.yhr.smcp.entities.character.Achievements;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
-import com.yhr.smcp.entities.character.PVPSummary;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -17,11 +13,15 @@ import org.hibernate.type.SqlTypes;
 @Builder
 public class GuildMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "guild_id", nullable = false)
+    private Guild guild;
 
     @Column(unique = true, nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String realm;
 
@@ -29,9 +29,9 @@ public class GuildMember {
     private String activeTitle;
     private String gender;
     private String faction;
-    private String race;
-    private String characterClass;
-    private String activeSpecialization;
+    private Integer raceId;
+    private Integer classId;
+    private Integer activeSpecializationId;
     private Integer level;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,19 +1,19 @@
-package com.yhr.smcp.services;
+package com.yhr.smcp.services.guild;
 
-import com.yhr.smcp.entities.GuildMember;
+import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
 import com.yhr.smcp.repositories.MemberRepository;
+import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.services.MythicPlusService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
-import java.time.Duration;
-
 @Service
 @AllArgsConstructor
 public class MemberService {
-    private static final Duration CACHE_TTL = Duration.ofHours(1);
+    // private static final Duration CACHE_TTL = Duration.ofHours(1);
 
     private final MemberRepository memberRepository;
     private final BlizzardApiService blizzardApiService;
@@ -56,11 +56,5 @@ public class MemberService {
         // return memberRepository.save(guildMember);
         return guildMember;
     }
-
-
-    public GuildMember getGuildMember(String realm, String characterName) {
-        return memberRepository.findByNameAndRealm(realm, characterName).orElse(null);
-    }
-
 
 }

@@ -1,8 +1,8 @@
 package com.yhr.smcp.controllers;
 
-import com.yhr.smcp.entities.GuildMember;
+import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
-import com.yhr.smcp.services.MemberService;
+import com.yhr.smcp.services.guild.MemberService;
 import com.yhr.smcp.services.MythicPlusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
