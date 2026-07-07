@@ -12,8 +12,16 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BlizzardApiService {
+public class BlizzardApiService { //TODO: separar os namespaces em arquivos diferentes: profile-us/static-us/dynamic-us
     private final WebClient blizzardWebClient;
+
+    public Mono<String> getGuild(String realm, String guildSlug) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/guild/{realm}/{guildSlug}?namespace=profile-us&locale=en_US", realm, guildSlug)
+                .retrieve()
+                .bodyToMono(String.class);
+
+    }
 
     public Mono<String> getGuildRoster(String realm, String guildName) {
         return blizzardWebClient.get()

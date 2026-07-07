@@ -13,7 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -44,14 +43,15 @@ public class MythicPlusService {
             List<JsonNode> seasonRootNodes = fetchSeasonNodes(realm, name, seasonIds);
 
             GameDataFacadeService.GameDataLookup gameDataLookups = gameDataService.buildLookUps(seasonIds, seasonRootNodes);
-            MythicPlusProfile profile = mythicPlusProfileParser.buildProfile(mythicProfileRoot);
+            MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
             mythicPlusProfileRepository.save(profile);
             saveProfileWithSeasons(seasonRootNodes, profile, gameDataLookups);
 
             return profile;
 
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) { //TODO: mexer nessa dos tratamentos de erros, aqui estou lancando o erro pra cima e logando ao mesmo tempo
             log.error("Error syncing mythic profile name={}, value={}", name, e.getMessage());
             throw new RuntimeException("MythicPlusService: failed to sync mythic plus profile: " + e.getMessage(), e);
         }

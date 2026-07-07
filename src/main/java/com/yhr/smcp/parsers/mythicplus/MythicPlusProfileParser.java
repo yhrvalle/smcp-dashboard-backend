@@ -9,7 +9,7 @@ import tools.jackson.databind.JsonNode;
 @Component
 public class MythicPlusProfileParser {
 
-    public MythicPlusProfile buildProfile(JsonNode profileRoot) {
+    public MythicPlusProfile parse(JsonNode profileRoot) {
         try {
             Double currentMythicRating = profileRoot.path("current_mythic_rating")
                     .path("rating").asDouble();

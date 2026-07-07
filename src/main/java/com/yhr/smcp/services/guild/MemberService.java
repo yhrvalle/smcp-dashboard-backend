@@ -2,7 +2,7 @@ package com.yhr.smcp.services.guild;
 
 import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.entities.character.MythicPlusProfile;
-import com.yhr.smcp.repositories.MemberRepository;
+import com.yhr.smcp.repositories.guild.MemberRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import com.yhr.smcp.services.MythicPlusService;
 import lombok.AllArgsConstructor;
@@ -47,9 +47,6 @@ public class MemberService {
                 .activeTitle(title)
                 .gender(gender)
                 .faction(faction)
-                .race(race)
-                .characterClass(characterClass)
-                .activeSpecialization(activeSpecialization)
                 .level(level)
                 .mythicPlusProfile(mythicPlusProfile)
                 .build();

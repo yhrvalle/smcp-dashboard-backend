@@ -46,7 +46,7 @@ public class KeystoneRunParser {
             long runDurationMilli = run.path("duration").asLong();
 
             Instant completedTimestamp = Instant.ofEpochMilli(completedTimestampMilli);
-            Instant runDuration = Instant.ofEpochMilli(runDurationMilli); // esta errado n é uma data é duracao
+            Instant runDuration = Instant.ofEpochMilli(runDurationMilli); //BUG: esta errado n é uma data é duracao
 
 
             Integer keystoneLevel = run.path("keystone_level").asInt();
