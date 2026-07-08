@@ -4,8 +4,7 @@ public record GuildMemberDTO(
         String name,
         String realm,
         Integer level,
-        String className,
-        String specName,
-        String race
+        String className
+        // String race TODO: fazer a tabela de gamedata races
 ) {
 }
