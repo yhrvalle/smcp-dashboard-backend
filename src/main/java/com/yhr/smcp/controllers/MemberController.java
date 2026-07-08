@@ -22,8 +22,8 @@ public class MemberController {
     public ResponseEntity<GuildMember> syncMember(
             @PathVariable String realm,
             @PathVariable String characterName) {
-        GuildMember member = characterService.syncMember(realm, characterName);
-        return ResponseEntity.ok(member);
+        
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping(value = "mplus/{realm}/{characterName}/sync")

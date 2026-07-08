@@ -17,7 +17,7 @@ public class GuildRosterParser {
         List<GuildMember> members = new ArrayList<>();
         rosterRoot.path("members").forEach(member -> {
             int guildRank = member.path("rank").asInt();
-            if (guildRank >= maxRank) {
+            if (guildRank > maxRank) {
                 return;
             }
             members.add(memberParser.parse(member));

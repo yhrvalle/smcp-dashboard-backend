@@ -2,8 +2,12 @@ package com.yhr.smcp.parsers.guild;
 
 import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
+@Component
+@AllArgsConstructor
 public class GuildMemberParser {
     public GuildMember parse(JsonNode memberRoot) {
         try {
@@ -15,7 +19,7 @@ public class GuildMemberParser {
             Integer level = characterNode.path("level").asInt();
             Integer classId = characterNode.path("playable_class").path("id").asInt();
             Integer raceId = characterNode.path("playable_race").path("id").asInt();
-            Integer guildRank = characterNode.path("guild_rank").asInt();
+            Integer guildRank = memberRoot.path("rank").asInt();
 
             return GuildMember.builder()
                     .id(id)

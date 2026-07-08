@@ -9,7 +9,7 @@ import tools.jackson.databind.JsonNode;
 public class CharacterParser {
     public CharacterProfile parse(JsonNode character) {
         try {
-            String title = character.path("active_title").asString(null);
+            String title = character.path("active_title").path("name").asString(null);
             String gender = character.path("gender").path("name").asString();
             String faction = character.path("faction").path("name").asString();
             Integer specId = character.path("active_specialization").path("id").asInt();

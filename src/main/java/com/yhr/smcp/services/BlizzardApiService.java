@@ -33,7 +33,8 @@ public class BlizzardApiService { //TODO: separar os namespaces em arquivos dife
 
     public Mono<String> getCharacter(String realm, String characterName) {
         return blizzardWebClient.get()
-                .uri("/profile/wow/character/{realmSlug}/{characterName}?namespace=profile-us&locale=en_US", realm, characterName)
+                .uri("/profile/wow/character/{realmSlug}/{characterName}?namespace=profile-us&locale=en_US",
+                        realm.toLowerCase(), characterName.toLowerCase())
                 .retrieve()
                 .bodyToMono(String.class);
     }

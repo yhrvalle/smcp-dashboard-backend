@@ -20,7 +20,7 @@ public class CharacterService {
     private final MythicPlusService mythicPlusService;
     private final ObjectMapper objectMapper;
 
-    public CharacterProfile SyncCharacter(GuildMember guildMember) {
+    public CharacterProfile syncCharacter(GuildMember guildMember) {
         String realm = guildMember.getRealm();
         String characterName = guildMember.getName();
 

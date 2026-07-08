@@ -1,9 +1,10 @@
 package com.yhr.smcp.scheduler.gamedata;
 
 import com.yhr.smcp.services.gamedata.KeystoneAffixDataService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +14,24 @@ import org.springframework.stereotype.Component;
 public class AffixDataSyncScheduler {
     private final KeystoneAffixDataService keystoneAffixDataService;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class) //todo: Melhorar os tratamentos de erros
     public void syncOnStartup() {
-        log.info("AffixDataSyncScheduler - running startup sync");
-        keystoneAffixDataService.syncKeystoneAffixes();
+        try {
+            keystoneAffixDataService.syncKeystoneAffixes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
     public void scheduledAffixDataSync() {
-        log.info("AffixDataSyncScheduler - running scheduled sync");
-        keystoneAffixDataService.syncKeystoneAffixes();
+        try {
+            keystoneAffixDataService.syncKeystoneAffixes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 
 }

@@ -8,7 +8,7 @@ import com.yhr.smcp.repositories.guild.GuildMemberRepository;
 import com.yhr.smcp.repositories.guild.GuildRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import com.yhr.smcp.services.character.CharacterService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class GuildService {
     private final GuildRepository guildRepository;
@@ -32,16 +32,16 @@ public class GuildService {
     @Value("${guild.roster.max_rank}")
     private Integer maxRank;
 
-    public Guild SyncGuild(String realm, String guildSlug) {
+    public Guild syncGuild(String realm, String guildSlug) {
         String rawJson = blizzardApiService.getGuild(realm, guildSlug).block();
         JsonNode guildRoot = objectMapper.readTree(rawJson);
         Guild guild = guildParser.parse(guildRoot);
         guildRepository.save(guild);
-        SyncGuildRoster(realm, guildSlug, guild);
+        syncGuildRoster(realm, guildSlug, guild);
         return guild;
     }
 
-    private void SyncGuildRoster(String realm, String guildSlug, Guild guild) {
+    private void syncGuildRoster(String realm, String guildSlug, Guild guild) {
         String rawJson = blizzardApiService.getGuildRoster(realm, guildSlug).block();
         JsonNode rosterRoot = objectMapper.readTree(rawJson);
         List<GuildMember> guildMembers = guildRosterParser.parse(rosterRoot, maxRank);
@@ -51,7 +51,7 @@ public class GuildService {
             }
             guildMember.setGuild(guild);
             guildMemberRepository.save(guildMember);
-            characterService.SyncCharacter(guildMember);
+            characterService.syncCharacter(guildMember);
         }
 
     }

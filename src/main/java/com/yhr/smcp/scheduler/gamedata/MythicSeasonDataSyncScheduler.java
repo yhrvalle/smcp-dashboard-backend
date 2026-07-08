@@ -1,9 +1,10 @@
 package com.yhr.smcp.scheduler.gamedata;
 
 import com.yhr.smcp.services.gamedata.KeystoneSeasonDataService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +14,23 @@ import org.springframework.stereotype.Component;
 public class MythicSeasonDataSyncScheduler {
     private final KeystoneSeasonDataService keystoneSeasonDataService;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class) //TODO: melhorar os tratamento de error
     public void syncOnStartup() {
-        log.info("MythicSeasonDataSyncScheduler - run on startup");
-        keystoneSeasonDataService.syncMythicSeasons();
+        try {
+            keystoneSeasonDataService.syncMythicSeasons();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
     public void scheduledMythicSeasonDataSync() {
-        log.info("MythicSeasonDataSyncScheduler - running scheduled sync");
-        keystoneSeasonDataService.syncMythicSeasons();
+        try {
+            keystoneSeasonDataService.syncMythicSeasons();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 }
