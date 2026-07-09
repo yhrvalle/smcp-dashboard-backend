@@ -1,6 +1,6 @@
-package com.yhr.smcp.scheduler.gamedata;
+package com.yhr.smcp.scheduler.gamedata.character;
 
-import com.yhr.smcp.services.gamedata.mythicplus.KeystoneAffixDataService;
+import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -11,27 +11,27 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class AffixDataSyncScheduler {
-    private final KeystoneAffixDataService keystoneAffixDataService;
+public class ClassDataSyncScheduler {
+    private final PlayableClassDataService playableClassDataService;
 
-    @EventListener(ApplicationReadyEvent.class) //todo: Melhorar os tratamentos de erros
-    public void syncOnStartup() {
+    @EventListener(ApplicationReadyEvent.class)  //TODO: melhorar os tratamentos de erros
+    public void classSyncOnStartup() {
         try {
-            keystoneAffixDataService.syncKeystoneAffixes();
+            playableClassDataService.syncPlayableClasses();
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledAffixDataSync() {
+    public void scheduledClassDataSync() {
         try {
-            keystoneAffixDataService.syncKeystoneAffixes();
+            playableClassDataService.syncPlayableClasses();
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
     }
 
 }

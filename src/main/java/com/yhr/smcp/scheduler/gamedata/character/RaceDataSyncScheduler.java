@@ -1,6 +1,6 @@
-package com.yhr.smcp.scheduler.gamedata;
+package com.yhr.smcp.scheduler.gamedata.character;
 
-import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
+import com.yhr.smcp.services.gamedata.character.PlayableRaceDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -11,27 +11,24 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ClassDataSyncScheduler {
-    private final PlayableClassDataService playableClassDataService;
+public class RaceDataSyncScheduler {
+    private final PlayableRaceDataService playableRaceDataService;
 
-    @EventListener(ApplicationReadyEvent.class)  //TODO: melhorar os tratamentos de erros
-    public void syncOnStartup() {
+    @EventListener(ApplicationReadyEvent.class)
+    public void raceSyncOnStartup() {
         try {
-            playableClassDataService.syncPlayableClasses();
-
+            playableRaceDataService.syncRaces();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledClassDataSync() {
+    public void scheduledRaceSync() {
         try {
-            playableClassDataService.syncPlayableClasses();
-
+            playableRaceDataService.syncRaces();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
-
 }

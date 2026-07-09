@@ -1,4 +1,4 @@
-package com.yhr.smcp.scheduler.gamedata;
+package com.yhr.smcp.scheduler.gamedata.mythicplus;
 
 import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class MythicSeasonDataSyncScheduler {
     private final KeystoneSeasonDataService keystoneSeasonDataService;
 
     @EventListener(ApplicationReadyEvent.class) //TODO: melhorar os tratamento de error
-    public void syncOnStartup() {
+    public void mythicSeasonSyncOnStartup() {
         try {
             keystoneSeasonDataService.syncMythicSeasons();
 
