@@ -1,6 +1,6 @@
 package com.yhr.smcp.parsers.gamedata;
 
-import com.yhr.smcp.entities.gamedata.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;

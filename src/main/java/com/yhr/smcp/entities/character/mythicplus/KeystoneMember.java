@@ -1,7 +1,7 @@
 package com.yhr.smcp.entities.character.mythicplus;
 
-import com.yhr.smcp.entities.gamedata.PlayableClass;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

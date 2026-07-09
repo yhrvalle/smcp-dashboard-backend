@@ -2,7 +2,7 @@ package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;

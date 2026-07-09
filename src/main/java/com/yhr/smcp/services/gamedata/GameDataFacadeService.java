@@ -1,6 +1,6 @@
 package com.yhr.smcp.services.gamedata;
 
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import lombok.RequiredArgsConstructor;

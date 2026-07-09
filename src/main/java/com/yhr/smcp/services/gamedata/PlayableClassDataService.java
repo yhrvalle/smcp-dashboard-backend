@@ -1,11 +1,11 @@
 package com.yhr.smcp.services.gamedata;
 
-import com.yhr.smcp.entities.gamedata.PlayableClass;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.parsers.gamedata.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.PlayableSpecializationsParser;
-import com.yhr.smcp.repositories.gamedata.PlayableClassRepository;
-import com.yhr.smcp.repositories.gamedata.PlayableSpecializationRepository;
+import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
+import com.yhr.smcp.repositories.gamedata.character.PlayableSpecializationRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
