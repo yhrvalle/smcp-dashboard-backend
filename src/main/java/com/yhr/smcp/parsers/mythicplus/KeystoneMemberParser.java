@@ -1,8 +1,8 @@
 package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
-import com.yhr.smcp.entities.gamedata.PlayableClass;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;

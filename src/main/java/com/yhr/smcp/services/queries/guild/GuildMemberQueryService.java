@@ -1,10 +1,10 @@
 package com.yhr.smcp.services.queries.guild;
 
 import com.yhr.smcp.dto.response.guild.GuildMemberDTO;
-import com.yhr.smcp.entities.gamedata.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.mappers.GuildMapper;
 import com.yhr.smcp.repositories.guild.GuildMemberRepository;
-import com.yhr.smcp.services.gamedata.PlayableClassDataService;
+import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

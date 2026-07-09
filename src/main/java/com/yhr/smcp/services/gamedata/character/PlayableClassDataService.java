@@ -1,11 +1,11 @@
-package com.yhr.smcp.services.gamedata;
+package com.yhr.smcp.services.gamedata.character;
 
-import com.yhr.smcp.entities.gamedata.PlayableClass;
-import com.yhr.smcp.entities.gamedata.PlayableSpecialization;
-import com.yhr.smcp.parsers.gamedata.PlayableClassesParser;
-import com.yhr.smcp.parsers.gamedata.PlayableSpecializationsParser;
-import com.yhr.smcp.repositories.gamedata.PlayableClassRepository;
-import com.yhr.smcp.repositories.gamedata.PlayableSpecializationRepository;
+import com.yhr.smcp.entities.gamedata.character.PlayableClass;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
+import com.yhr.smcp.parsers.gamedata.character.PlayableClassesParser;
+import com.yhr.smcp.parsers.gamedata.character.PlayableSpecializationsParser;
+import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
+import com.yhr.smcp.repositories.gamedata.character.PlayableSpecializationRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -62,14 +62,5 @@ public class PlayableClassDataService {
     public PlayableSpecialization findPlayableSpecializationById(Integer id) {
         return playableSpecializationRepository.findById(id).orElse(null);
     }
-
-    public void saveClass(PlayableClass playableClass) {
-        playableClassRepository.save(playableClass);
-    }
-
-    public void saveSpecialization(PlayableSpecialization playableSpecialization) {
-        playableSpecializationRepository.save(playableSpecialization);
-    }
-
 
 }

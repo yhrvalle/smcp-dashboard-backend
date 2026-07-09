@@ -1,6 +1,6 @@
 package com.yhr.smcp.controllers.gamedata.mythicplus;
 
-import com.yhr.smcp.services.gamedata.KeystoneAffixDataService;
+import com.yhr.smcp.services.gamedata.mythicplus.KeystoneAffixDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

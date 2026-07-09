@@ -1,6 +1,6 @@
-package com.yhr.smcp.scheduler.gamedata;
+package com.yhr.smcp.scheduler.gamedata.mythicplus;
 
-import com.yhr.smcp.services.gamedata.PlayableClassDataService;
+import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ClassDataSyncScheduler {
-    private final PlayableClassDataService playableClassDataService;
+public class MythicSeasonDataSyncScheduler {
+    private final KeystoneSeasonDataService keystoneSeasonDataService;
 
-    @EventListener(ApplicationReadyEvent.class)  //TODO: melhorar os tratamentos de erros
-    public void syncOnStartup() {
+    @EventListener(ApplicationReadyEvent.class) //TODO: melhorar os tratamento de error
+    public void mythicSeasonSyncOnStartup() {
         try {
-            playableClassDataService.syncPlayableClasses();
+            keystoneSeasonDataService.syncMythicSeasons();
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -25,13 +25,12 @@ public class ClassDataSyncScheduler {
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledClassDataSync() {
+    public void scheduledMythicSeasonDataSync() {
         try {
-            playableClassDataService.syncPlayableClasses();
-
+            keystoneSeasonDataService.syncMythicSeasons();
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-    }
 
+    }
 }

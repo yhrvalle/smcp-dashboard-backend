@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.gamedata;
+package com.yhr.smcp.entities.gamedata.character;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

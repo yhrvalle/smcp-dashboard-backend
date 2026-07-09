@@ -1,4 +1,4 @@
-package com.yhr.smcp.services.gamedata;
+package com.yhr.smcp.services.gamedata.mythicplus;
 
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneAffixParser;
