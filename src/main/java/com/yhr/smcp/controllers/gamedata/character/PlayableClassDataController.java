@@ -1,6 +1,6 @@
-package com.yhr.smcp.controllers.gamedata;
+package com.yhr.smcp.controllers.gamedata.character;
 
-import com.yhr.smcp.services.gamedata.PlayableClassDataService;
+import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ public class PlayableClassDataController {
     @PostMapping("/sync-classes")
     public ResponseEntity<String> syncClasses() {
         playableClassDataService.syncPlayableClasses();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build(); //TODO: add some return thing
     }
 
 

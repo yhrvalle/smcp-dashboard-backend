@@ -1,4 +1,4 @@
-package com.yhr.smcp.services.gamedata;
+package com.yhr.smcp.services.gamedata.mythicplus;
 
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneSeasonParser;
@@ -41,10 +41,6 @@ public class KeystoneSeasonDataService {
 
     public KeystoneSeason findKeystoneSeasonById(Integer seasonId) {
         return keystoneSeasonsRepository.findById(seasonId).orElse(null);
-    }
-
-    public void saveKeystoneSeason(KeystoneSeason keystoneSeason) {
-        keystoneSeasonsRepository.save(keystoneSeason);
     }
 
 }

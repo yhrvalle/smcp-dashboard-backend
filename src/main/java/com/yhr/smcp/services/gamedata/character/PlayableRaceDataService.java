@@ -1,4 +1,4 @@
-package com.yhr.smcp.services.gamedata;
+package com.yhr.smcp.services.gamedata.character;
 
 import com.yhr.smcp.entities.gamedata.character.PlayableRace;
 import com.yhr.smcp.parsers.gamedata.character.PlayableRaceParser;

@@ -1,6 +1,6 @@
 package com.yhr.smcp.scheduler.gamedata;
 
-import com.yhr.smcp.services.gamedata.KeystoneSeasonDataService;
+import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
