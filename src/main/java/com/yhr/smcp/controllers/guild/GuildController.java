@@ -1,19 +1,22 @@
 package com.yhr.smcp.controllers.guild;
 
+import com.yhr.smcp.dto.response.guild.GuildMemberDTO;
 import com.yhr.smcp.entities.guild.Guild;
+import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.services.guild.GuildService;
+import com.yhr.smcp.services.queries.guild.GuildMemberQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/guild")
 @RequiredArgsConstructor
 public class GuildController {
     private final GuildService guildService;
+    private final GuildMemberQueryService guildMemberQueryService;
 
     @PostMapping("{realm}/{guildSlug}/sync")
     public ResponseEntity<Guild> syncGuild(@PathVariable("realm") String realm,
@@ -21,4 +24,13 @@ public class GuildController {
         Guild guild = guildService.syncGuild(realm, guildSlug);
         return ResponseEntity.ok(guild); //TODO: retornar DTO
     }
+
+    @GetMapping("{guildId}/members")
+    public ResponseEntity<Page<GuildMemberDTO>> getGuildMembers(@PathVariable("guildId") Long guildId,
+                                                                Pageable pageable) {
+        Page<GuildMemberDTO> members = guildMemberQueryService.getGuildRoster(guildId, pageable);
+        return ResponseEntity.ok(members);
+
+    }
+
 }

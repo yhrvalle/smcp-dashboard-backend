@@ -6,6 +6,7 @@ import com.yhr.smcp.entities.guild.GuildMember;
 public class GuildMapper {
     public static GuildMemberDTO toGuildMemberDTO(GuildMember guildMember, String className) {
         return new GuildMemberDTO(
+                guildMember.getId(),
                 guildMember.getName(),
                 guildMember.getRealm(),
                 guildMember.getLevel(),
