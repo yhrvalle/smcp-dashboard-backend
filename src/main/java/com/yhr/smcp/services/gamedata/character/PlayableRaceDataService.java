@@ -36,4 +36,8 @@ public class PlayableRaceDataService {
         }
 
     }
+
+    public PlayableRace findPlayableRaceId(Integer raceId) {
+        return playableRaceRepository.findById(raceId).orElse(null);
+    }
 }
