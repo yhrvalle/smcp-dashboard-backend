@@ -26,7 +26,7 @@ public class GuildMember {
     private String realm;
 
     private Integer guildRank;
-    private Integer raceId; //TODO: criar tb_gamedata_races
+    private Integer raceId;
     private Integer classId;
     private Integer level;
 
