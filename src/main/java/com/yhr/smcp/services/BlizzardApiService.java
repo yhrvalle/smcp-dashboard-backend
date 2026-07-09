@@ -74,7 +74,7 @@ public class BlizzardApiService { //TODO: separar os namespaces em arquivos dife
                 .collectList();
     }
 
-    // -- GAME DATA CLASSES AND SPECS --
+    // -- GAME DATA  --
     public Mono<String> getPlayableClassesIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us&locale=en_US")
@@ -89,8 +89,6 @@ public class BlizzardApiService { //TODO: separar os namespaces em arquivos dife
                 .bodyToMono(String.class);
     }
 
-
-    // -- M+ AFFIX --
     public Mono<String> getAffixIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/keystone-affix/index?namespace=static-us&locale=en_US")
@@ -105,7 +103,14 @@ public class BlizzardApiService { //TODO: separar os namespaces em arquivos dife
                 .bodyToMono(String.class);
     }
 
-    // -- M+ SEASON
+    public Mono<String> getRaceIndex() {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/playable-race/index?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    // -- M+ SEASON --
 
     public Mono<String> getSeasonIndex() {
         return blizzardWebClient.get()
