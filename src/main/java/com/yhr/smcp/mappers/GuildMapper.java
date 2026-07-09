@@ -1,6 +1,8 @@
 package com.yhr.smcp.mappers;
 
+import com.yhr.smcp.dto.response.guild.GuildDTO;
 import com.yhr.smcp.dto.response.guild.GuildMemberDTO;
+import com.yhr.smcp.entities.guild.Guild;
 import com.yhr.smcp.entities.guild.GuildMember;
 
 public class GuildMapper {
@@ -13,6 +15,17 @@ public class GuildMapper {
                 className,
                 raceName
         );
+    }
 
+    public static GuildDTO toGuildDTO(Guild guild) {
+        return new GuildDTO(
+                guild.getId(),
+                guild.getName(),
+                guild.getFaction(),
+                guild.getRealm(),
+                guild.getCreatedTimestamp(),
+                guild.getAchievementPoints(),
+                guild.getMemberCount()
+        );
     }
 }
