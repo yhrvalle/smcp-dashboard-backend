@@ -43,6 +43,7 @@ public class MythicPlusService {
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
             List<JsonNode> seasonRootNodes = fetchSeasonNodes(realm, name, seasonIds);
 
+            //TODO: refactor, eu acho que da pra fazer sem esses lookup lokos
             GameDataFacadeService.GameDataLookup gameDataLookups = gameDataService.buildLookUps(seasonIds, seasonRootNodes);
             MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
             mythicPlusProfileRepository.save(profile);
