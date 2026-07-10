@@ -27,6 +27,12 @@ public class GuildController {
         return ResponseEntity.ok(guildQueryService.getGuild(guild.getId()));
     }
 
+    @GetMapping("{guildId}/guild")
+    public ResponseEntity<GuildDTO> getGuild(@PathVariable("guildId") Long guildId) {
+        GuildDTO guild = guildQueryService.getGuild(guildId);
+        return ResponseEntity.ok(guild);
+    }
+
     @GetMapping("{guildId}/members")
     public ResponseEntity<Page<GuildMemberDTO>> getGuildMembers(@PathVariable("guildId") Long guildId,
                                                                 Pageable pageable) {

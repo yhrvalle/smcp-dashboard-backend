@@ -16,7 +16,9 @@ public class GuildQueryService {
     private final GuildRepository guildRepository;
 
     public GuildDTO getGuild(Long guildId) {
-        Guild guild = guildRepository.findById(guildId).orElse(null); //TODO: null checking
+        Guild guild = guildRepository.findById(guildId).orElseThrow(
+                () -> new RuntimeException("GuildQueryService = guild=" + guildId + " not found")
+        );
         return GuildMapper.toGuildDTO(guild);
     }
 }
