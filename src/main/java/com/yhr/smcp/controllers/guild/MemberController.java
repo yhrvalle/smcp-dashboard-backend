@@ -1,4 +1,4 @@
-package com.yhr.smcp.controllers;
+package com.yhr.smcp.controllers.guild;
 
 import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
@@ -22,7 +22,7 @@ public class MemberController {
     public ResponseEntity<GuildMember> syncMember(
             @PathVariable String realm,
             @PathVariable String characterName) {
-        
+
         return ResponseEntity.ok(null);
     }
 

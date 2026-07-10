@@ -22,7 +22,6 @@ public class CharacterProfileQueryService {
     private final PlayableClassDataService playableClassDataService;
     private final PlayableRaceDataService playableRaceDataService;
 
-
     public CharacterProfileDTO getCharacterProfile(Long id) {
         CharacterProfile profile = characterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("CharacterProfileQueryService, character " + id + " not found!")
