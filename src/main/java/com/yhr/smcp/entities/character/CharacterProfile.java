@@ -25,6 +25,7 @@ public class CharacterProfile {
     private String gender;
     private String faction;
     private Integer activeSpecializationId;
+    private Long itemLevel;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "mythic_plus_profile_id")

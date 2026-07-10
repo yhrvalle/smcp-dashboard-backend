@@ -20,10 +20,9 @@ public class CharacterService {
     private final MythicPlusService mythicPlusService;
     private final ObjectMapper objectMapper;
 
-    public CharacterProfile syncCharacter(GuildMember guildMember) {
+    public void syncCharacter(GuildMember guildMember) {
         String realm = guildMember.getRealm();
         String characterName = guildMember.getName();
-
         String rawJson = blizzardApiService.getCharacter(realm, characterName).block();
         JsonNode characterRoot = objectMapper.readTree(rawJson);
         CharacterProfile characterProfile = characterParser.parse(characterRoot);
@@ -31,7 +30,6 @@ public class CharacterService {
         characterProfile.setMythicPlusProfile(mythicPlusProfile);
         characterProfile.setGuildMember(guildMember);
         characterRepository.save(characterProfile);
-        return characterProfile;
     }
 
 }
