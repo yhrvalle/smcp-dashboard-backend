@@ -37,7 +37,7 @@ public class GuildService {
         JsonNode guildRoot = objectMapper.readTree(rawJson);
         Guild guild = guildParser.parse(guildRoot);
         guildRepository.save(guild);
-        syncGuildRoster(realm, guildSlug, guild);
+        syncGuildRoster(realm, guildSlug, guild); //TODO: maybe tirar isso daqui pro sync ser só dos dados da guild ai ser outro endpoint que puxa o roster
         return guild;
     }
 
@@ -49,9 +49,14 @@ public class GuildService {
             if (guildMemberRepository.existsById(guildMember.getId())) {
                 continue;
             }
-            guildMember.setGuild(guild);
-            guildMemberRepository.save(guildMember);
-            characterService.syncCharacter(guildMember);
+            try {
+                guildMember.setGuild(guild);
+                guildMemberRepository.save(guildMember);
+                characterService.syncCharacter(guildMember);
+
+            } catch (Exception e) {
+                log.error("failed sync member={} id={}: {}", guildMember.getName(), guildMember.getId(), e.getMessage());
+            }
         }
 
     }

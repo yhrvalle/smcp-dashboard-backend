@@ -20,8 +20,8 @@ public class CharacterMapper {
                 charProfile.getFaction(),
                 charProfile.getGender(),
                 raceName,
-                specName,
                 className,
+                specName,
                 currentMythicRating,
                 ratingColorHex
         );
