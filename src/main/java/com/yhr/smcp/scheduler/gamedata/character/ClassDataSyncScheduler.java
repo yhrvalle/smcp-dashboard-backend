@@ -14,23 +14,23 @@ import org.springframework.stereotype.Component;
 public class ClassDataSyncScheduler {
     private final PlayableClassDataService playableClassDataService;
 
-    @EventListener(ApplicationReadyEvent.class)  //TODO: melhorar os tratamentos de erros
+    @EventListener(ApplicationReadyEvent.class)
     public void classSyncOnStartup() {
         try {
             playableClassDataService.syncPlayableClasses();
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("classSyncOnStartup: startup sync failed", e);
         }
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledClassDataSync() {
+    public void scheduledClassSync() {
         try {
             playableClassDataService.syncPlayableClasses();
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("scheduledClassDataSync: scheduled sync failed", e);
         }
     }
 

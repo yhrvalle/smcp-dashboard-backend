@@ -14,22 +14,22 @@ import org.springframework.stereotype.Component;
 public class MythicSeasonDataSyncScheduler {
     private final KeystoneSeasonDataService keystoneSeasonDataService;
 
-    @EventListener(ApplicationReadyEvent.class) //TODO: melhorar os tratamento de error
+    @EventListener(ApplicationReadyEvent.class)
     public void mythicSeasonSyncOnStartup() {
         try {
             keystoneSeasonDataService.syncMythicSeasons();
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("mythicSeasonSyncOnStartup: startup sync failed", e);
         }
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledMythicSeasonDataSync() {
+    public void scheduledMythicSeasonSync() {
         try {
             keystoneSeasonDataService.syncMythicSeasons();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("scheduledMythicSeasonSync: scheduled sync failed", e);
         }
 
     }
