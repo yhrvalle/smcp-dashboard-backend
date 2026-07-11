@@ -1,12 +1,14 @@
 package com.yhr.smcp.services.gamedata.character;
 
 import com.yhr.smcp.entities.gamedata.character.PlayableRace;
+import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.character.PlayableRaceParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableRaceRepository;
 import com.yhr.smcp.services.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -32,6 +34,10 @@ public class PlayableRaceDataService {
                 PlayableRace race = playableRaceParser.parse(raceNode);
                 playableRaceRepository.save(race);
 
+            } catch (BlizzardParsingException e) {
+                log.error("failed to parse race id={}", raceId, e);
+            } catch (DataAccessException e) {
+                log.error("failed to save race id={}", raceId, e);
             } catch (Exception e) {
                 log.error("failed to sync race id={}", raceId, e);
             }
