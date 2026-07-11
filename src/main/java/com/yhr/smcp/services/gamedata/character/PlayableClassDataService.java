@@ -2,6 +2,7 @@ package com.yhr.smcp.services.gamedata.character;
 
 import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
+import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.character.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.character.PlayableSpecializationsParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
@@ -31,14 +32,15 @@ public class PlayableClassDataService {
 
     @Transactional
     public void syncPlayableClasses() {
-        try {
-            String rawIndexJson = blizzardApiService.getPlayableClassesIndex().block();
-            JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
-            indexRoot.path("classes").forEach(classNode -> {
-                Integer classId = classNode.path("id").asInt();
-                if (playableClassRepository.existsById(classId)) {
-                    return;
-                }
+        String rawIndexJson = fetchClassIndex();
+        JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
+
+        indexRoot.path("classes").forEach(classNode -> {
+            Integer classId = classNode.path("id").asInt();
+            if (playableClassRepository.existsById(classId)) {
+                return;
+            }
+            try {
                 String classDetailsJson = blizzardApiService.getPlayableClass(classId).block();
                 JsonNode detailsRoot = objectMapper.readTree(classDetailsJson);
 
@@ -48,11 +50,11 @@ public class PlayableClassDataService {
                 List<PlayableSpecialization> specs = playableSpecializationsParser.parse(detailsRoot, playableClass);
                 playableSpecializationRepository.saveAll(specs);
 
-            });
-        } catch (Exception e) {
-            throw new RuntimeException("GameDataService syncPlayableClasses failed:" + e.getMessage(), e);
-        }
+            } catch (Exception e) {
+                log.error("failed to sync class id={}", classId, e);
+            }
 
+        });
     }
 
     public PlayableClass findPlayableClassById(Integer id) {
@@ -63,4 +65,11 @@ public class PlayableClassDataService {
         return playableSpecializationRepository.findById(id).orElse(null);
     }
 
+    private String fetchClassIndex() {
+        try {
+            return blizzardApiService.getPlayableClassesIndex().block();
+        } catch (Exception e) {
+            throw new BlizzardSyncException("failed to fetch playable classes indexes", e);
+        }
+    }
 }
