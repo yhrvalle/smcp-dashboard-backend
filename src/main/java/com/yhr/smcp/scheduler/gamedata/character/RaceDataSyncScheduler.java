@@ -19,7 +19,7 @@ public class RaceDataSyncScheduler {
         try {
             playableRaceDataService.syncRaces();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("raceSyncOnStartup: startup sync failed");
         }
     }
 
@@ -28,7 +28,7 @@ public class RaceDataSyncScheduler {
         try {
             playableRaceDataService.syncRaces();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("scheduledRaceSync: scheduled sync failed");
         }
     }
 }

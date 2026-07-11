@@ -32,6 +32,7 @@ public class CharacterProfileQueryService {
         return CharacterMapper.toCharacterProfileDTO(profile, className, raceName, specName);
     }
 
+    //TODO: pensar se é melhor retornar algo ou só null mesmo
     private String getSpecName(CharacterProfile profile) {
         PlayableSpecialization spec = playableClassDataService.findPlayableSpecializationById(profile.getActiveSpecializationId());
         return spec != null ? spec.getName() : null;

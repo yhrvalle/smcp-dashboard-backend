@@ -14,22 +14,22 @@ import org.springframework.stereotype.Component;
 public class AffixDataSyncScheduler {
     private final KeystoneAffixDataService keystoneAffixDataService;
 
-    @EventListener(ApplicationReadyEvent.class) //todo: Melhorar os tratamentos de erros
+    @EventListener(ApplicationReadyEvent.class)
     public void affixSyncOnStartup() {
         try {
             keystoneAffixDataService.syncKeystoneAffixes();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("affixSyncOnStartup: startup sync failed", e);
         }
 
     }
 
     @Scheduled(cron = "${scheduler.gamedata.sync.cron}")
-    public void scheduledAffixDataSync() {
+    public void scheduledAffixSync() {
         try {
             keystoneAffixDataService.syncKeystoneAffixes();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("scheduledAffixSync: scheduled sync failed", e);
         }
 
     }
