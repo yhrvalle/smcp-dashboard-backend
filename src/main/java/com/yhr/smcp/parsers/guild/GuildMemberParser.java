@@ -2,17 +2,14 @@ package com.yhr.smcp.parsers.guild;
 
 import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
 @Component
-@AllArgsConstructor
 public class GuildMemberParser {
     public GuildMember parse(JsonNode memberRoot) {
         try {
             JsonNode characterNode = memberRoot.path("character");
-
             Long id = characterNode.path("id").asLong();
             String name = characterNode.path("name").asString();
             String realm = characterNode.path("realm").path("slug").asString();
