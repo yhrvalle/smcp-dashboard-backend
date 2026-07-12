@@ -13,8 +13,8 @@ import java.util.List;
 public class PlayableSpecializationsParser {
     public List<PlayableSpecialization> parse(JsonNode classNode, PlayableClass playableClass) {
         List<PlayableSpecialization> playableSpecializations = new ArrayList<>();
-        try {
-            classNode.path("specializations").forEach(specNode -> {
+        classNode.path("specializations").forEach(specNode -> {
+            try {
                 String name = specNode.path("name").asString();
                 Integer id = specNode.path("id").asInt();
                 playableSpecializations.add(PlayableSpecialization.builder()
@@ -22,12 +22,10 @@ public class PlayableSpecializationsParser {
                         .id(id)
                         .playableClass(playableClass)
                         .build());
-            });
-            return playableSpecializations;
-        } catch (Exception e) {
-            throw new BlizzardParsingException("PlayableSpecialization", "name=" + classNode.path("specializations")
-                    .path("name").asString(), e);
-        }
-
+            } catch (Exception e) {
+                throw new BlizzardParsingException("KeystoneSeasonParser", "id=" + specNode.path("id").asString(), e);
+            }
+        });
+        return playableSpecializations;
     }
 }

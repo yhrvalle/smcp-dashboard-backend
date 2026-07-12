@@ -20,6 +20,5 @@ public class KeystoneAffixParser {
         } catch (Exception e) {
             throw new BlizzardParsingException("KeystoneAffix", "name=" + affixNode.path("name").asString(), e);
         }
-
     }
 }
