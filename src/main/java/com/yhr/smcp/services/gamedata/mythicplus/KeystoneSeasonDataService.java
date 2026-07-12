@@ -45,10 +45,6 @@ public class KeystoneSeasonDataService {
 
     }
 
-    public KeystoneSeason findKeystoneSeasonById(Integer seasonId) {
-        return keystoneSeasonsRepository.findById(seasonId).orElse(null);
-    }
-
     public KeystoneSeason getReferenceById(Integer seasonId) {
         return keystoneSeasonsRepository.findById(seasonId).orElse(null);
     }
