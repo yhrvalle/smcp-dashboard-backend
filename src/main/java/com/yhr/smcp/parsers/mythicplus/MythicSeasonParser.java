@@ -20,17 +20,14 @@ import java.util.Map;
 public class MythicSeasonParser {
     private final KeystoneRunParser keystoneRunParser;
 
-    public SeasonParserResult parse(JsonNode season, Map<Integer, PlayableSpecialization> specClassMap,
-                                    Map<Integer, KeystoneSeason> keystoneSeasonMap, Map<Integer, KeystoneAffix> keystoneAffixMap) {
+    public SeasonParserResult parse(JsonNode season) {
         try {
             List<KeystoneRun> runs = new ArrayList<>();
             season.path("best_runs").forEach(run -> {
-                runs.add(keystoneRunParser.parse(run, specClassMap, keystoneAffixMap));
+                runs.add(keystoneRunParser.parse(run));
             });
 
-            Integer id = season.path("season").path("id").asInt();
-            KeystoneSeason keystoneSeason = keystoneSeasonMap.get(id);
-
+            Integer keystoneSeasonId = season.path("season").path("id").asInt();
             Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
             JsonNode colors = season.path("mythic_rating").path("color");
@@ -39,9 +36,8 @@ public class MythicSeasonParser {
             MythicSeason mythicSeason = MythicSeason.builder()
                     .seasonRating(seasonRating)
                     .ratingColor(ratingColor)
-                    .keystoneSeason(keystoneSeason)
                     .build();
-            return new SeasonParserResult(mythicSeason, runs);
+            return new SeasonParserResult(mythicSeason, keystoneSeasonId, runs);
         } catch (BlizzardParsingException e) {
             throw e;
         } catch (Exception e) {
@@ -49,6 +45,6 @@ public class MythicSeasonParser {
         }
     }
 
-    public record SeasonParserResult(MythicSeason mythicSeason, List<KeystoneRun> keystoneRuns) {
+    public record SeasonParserResult(MythicSeason mythicSeason, Integer seasonId, List<KeystoneRun> keystoneRuns) {
     }
 }

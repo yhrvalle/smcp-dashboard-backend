@@ -17,9 +17,7 @@ public class MythicSeason {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double seasonRating;
-
     private String ratingColor;
 
     @ManyToOne
