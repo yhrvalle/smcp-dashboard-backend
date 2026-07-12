@@ -13,7 +13,7 @@ public class KeystoneSeasonParser {
         try {
             Integer id = seasonNode.path("id").asInt();
 
-            long startMilliSeconds = seasonNode.path("start_timestamp").asLong(); // millisegundos do unix
+            long startMilliSeconds = seasonNode.path("start_timestamp").asLong();
             Instant startTimestamp = Instant.ofEpochMilli(startMilliSeconds);
 
             Instant endTimestamp = null;
@@ -21,7 +21,7 @@ public class KeystoneSeasonParser {
                 long endMillisSeconds = seasonNode.path("end_timestamp").asLong();
                 endTimestamp = Instant.ofEpochMilli(endMillisSeconds);
             }
-            
+
             String name = seasonNode.path("season_name").asString("blizzard api sucks and this field was null");
             return KeystoneSeason.builder()
                     .id(id)
@@ -30,7 +30,7 @@ public class KeystoneSeasonParser {
                     .name(name)
                     .build();
         } catch (Exception e) {
-            throw new BlizzardParsingException("KeystoneSeasonParser", "id=" + seasonNode.path("id") + e.getMessage(), e);
+            throw new BlizzardParsingException("KeystoneSeasonParser", "id=" + seasonNode.path("id").asString(), e);
         }
     }
 }
