@@ -17,7 +17,6 @@ public class GuildMemberParser {
             Integer classId = characterNode.path("playable_class").path("id").asInt();
             Integer raceId = characterNode.path("playable_race").path("id").asInt();
             Integer guildRank = memberRoot.path("rank").asInt();
-
             return GuildMember.builder()
                     .id(id)
                     .name(name)
@@ -28,7 +27,8 @@ public class GuildMemberParser {
                     .guildRank(guildRank)
                     .build();
         } catch (Exception e) {
-            throw new BlizzardParsingException("GuildMember", "member=" + memberRoot.path("id"), e);
+            throw new BlizzardParsingException("GuildMember", "member=" + memberRoot.path("character")
+                    .path("id").asLong(), e);
         }
     }
 }

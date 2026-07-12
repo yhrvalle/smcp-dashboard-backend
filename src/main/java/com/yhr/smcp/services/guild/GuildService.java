@@ -53,23 +53,24 @@ public class GuildService {
         try {
             String rawJson = blizzardApiService.getGuildRoster(realm, guildSlug).block();
             JsonNode rosterRoot = objectMapper.readTree(rawJson);
-            List<GuildMember> guildMembers = new ArrayList<>();
             rosterRoot.path("members").forEach(member -> {
-                        int guildRank = member.path("rank").asInt();
-                        if (guildRank > maxRank) {
-                            return;
-                        }
-                        guildMembers.add(guildMemberParser.parse(member));
+                try {
+                    int guildRank = member.path("rank").asInt();
+                    if (guildRank > maxRank) {
+                        return;
                     }
-            );
+                    GuildMember guildMember = guildMemberParser.parse(member);
+                    if (guildMemberRepository.existsById(guildMember.getId())) {
+                        return;
+                    }
+                    guildMember.setGuild(guild);
+                    guildMemberRepository.save(guildMember);
 
-            for (GuildMember guildMember : guildMembers) {
-                if (guildMemberRepository.existsById(guildMember.getId())) {
-                    continue;
+                } catch (Exception e) {
+                    log.error("failed to sync member id={}", member.path("character")
+                            .path("id").asLong(), e);
                 }
-                guildMember.setGuild(guild);
-                guildMemberRepository.save(guildMember);
-            }
+            });
         } catch (Exception e) {
             throw new BlizzardSyncException("Failed to sync guild roster, guild=%s, at realm=%s".formatted(guildSlug, realm), e);
         }
