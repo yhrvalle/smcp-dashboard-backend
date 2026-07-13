@@ -1,12 +1,16 @@
 package com.yhr.smcp.mappers;
 
 import com.yhr.smcp.dto.response.mythicplus.*;
-import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MythicPlusMapper {
 
@@ -29,8 +33,8 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunResponseDTO buildKeystoneRunDTO(KeystoneRun keystoneRun) {
-        List<AffixDTO> affixes = getAffixDTOS(keystoneRun);
+    public static KeystoneRunResponseDTO buildKeystoneRunDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap) {
+        List<AffixDTO> affixes = getAffixDTOS(keystoneRun, affixMap);
         return new KeystoneRunResponseDTO(
                 keystoneRun.getId(),
                 keystoneRun.getDungeonName(),
@@ -44,9 +48,10 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunDetailResponseDTO buildKeystoneRunDetailDTO(KeystoneRun keystoneRun) {
-        List<AffixDTO> affixes = getAffixDTOS(keystoneRun);
-        List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> members = getMembersDTOS(keystoneRun);
+    public static KeystoneRunDetailResponseDTO buildKeystoneRunDetailDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap,
+                                                                         Map<Integer, PlayableSpecialization> specMap) {
+        List<AffixDTO> affixes = getAffixDTOS(keystoneRun, affixMap);
+        List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> members = getMembersDTOS(keystoneRun, specMap);
         return new KeystoneRunDetailResponseDTO(
                 keystoneRun.getId(),
                 keystoneRun.getDungeonName(),
@@ -61,28 +66,32 @@ public class MythicPlusMapper {
         );
     }
 
-
-    // extracted methods
-    private static @NonNull List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> getMembersDTOS(KeystoneRun keystoneRun) {
+    private static @NonNull List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> getMembersDTOS(KeystoneRun keystoneRun,
+                                                                                                 Map<Integer, PlayableSpecialization> specMap) {
         return keystoneRun.getMembers().stream()
-                .map(member -> new KeystoneRunDetailResponseDTO.KeystoneMembersDTO(
-                        member.getCharacterName(),
-                        member.getRealm(),
-                        member.getPlayableSpecialization().getName(),
-                        member.getPlayableClass().getName(),
-                        member.getRace(),
-                        member.getItemLevel()
-                ))
+                .map(member -> {
+                            PlayableSpecialization spec = specMap.get(member.getSpecializationId());
+                            String specName = spec != null ? spec.getName() : null;
+                            String className = spec != null ? spec.getPlayableClass().getName() : null;
+                            return new KeystoneRunDetailResponseDTO.KeystoneMembersDTO(
+                                    member.getCharacterName(),
+                                    member.getRealm(),
+                                    specName,
+                                    className,
+                                    member.getRace(),
+                                    member.getItemLevel()
+                            );
+                        }
+                )
                 .toList();
     }
 
-    private static @NonNull List<AffixDTO> getAffixDTOS(KeystoneRun keystoneRun) {
-        return keystoneRun.getAffixes().stream()
-                .map(affix -> new AffixDTO(
-                        affix.getId(),
-                        affix.getName(),
-                        affix.getDescription()
-                ))
+
+    private static @NonNull List<AffixDTO> getAffixDTOS(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap) {
+        return keystoneRun.getAffixIds().stream()
+                .map(affixMap::get)
+                .filter(Objects::nonNull)
+                .map(affix -> new AffixDTO(affix.getId(), affix.getName(), affix.getDescription()))
                 .toList();
     }
 }

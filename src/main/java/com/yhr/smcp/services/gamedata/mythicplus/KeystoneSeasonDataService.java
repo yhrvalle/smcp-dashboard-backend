@@ -45,7 +45,7 @@ public class KeystoneSeasonDataService {
 
     }
 
-    public KeystoneSeason findKeystoneSeasonById(Integer seasonId) {
+    public KeystoneSeason getReferenceById(Integer seasonId) {
         return keystoneSeasonsRepository.findById(seasonId).orElse(null);
     }
 
@@ -56,5 +56,6 @@ public class KeystoneSeasonDataService {
             throw new BlizzardSyncException("failed to fetch season indexes", e);
         }
     }
+
 
 }

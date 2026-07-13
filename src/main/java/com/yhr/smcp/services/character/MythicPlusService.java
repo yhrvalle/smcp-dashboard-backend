@@ -1,18 +1,22 @@
 package com.yhr.smcp.services.character;
 
-import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
+import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.exceptions.BlizzardParsingException;
+import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.mythicplus.MythicPlusProfileParser;
 import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser;
+import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser.SeasonParserResult;
 import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicPlusProfileRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
 import com.yhr.smcp.services.BlizzardApiService;
-import com.yhr.smcp.services.gamedata.GameDataFacadeService;
+import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -26,47 +30,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MythicPlusService {
     private final BlizzardApiService blizzardApiService;
-    private final GameDataFacadeService gameDataService;
     private final ObjectMapper objectMapper;
 
     private final MythicPlusProfileParser mythicPlusProfileParser;
     private final MythicSeasonParser mythicSeasonParser;
 
     private final MythicPlusProfileRepository mythicPlusProfileRepository;
+
+    private final KeystoneSeasonDataService keystoneSeasonDataService;
     private final MythicSeasonRepository mythicSeasonRepository;
     private final KeystoneRunRepository keystoneRunRepository;
 
     @Transactional
     public MythicPlusProfile syncProfile(String realm, String name) {
         try {
-            JsonNode mythicProfileRoot = fetchMythicProfileRoot(realm, name);
+            String mythicProfileRawJson = fetchMythicProfileRoot(realm, name);
+            JsonNode mythicProfileRoot = objectMapper.readTree(mythicProfileRawJson);
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
-            List<JsonNode> seasonRootNodes = fetchSeasonNodes(realm, name, seasonIds);
+            List<String> seasonsRawJson = fetchSeasonsRawJson(realm, name, seasonIds);
 
-            //TODO: refactor, eu acho que da pra fazer sem esses lookup lokos
-            GameDataFacadeService.GameDataLookup gameDataLookups = gameDataService.buildLookUps(seasonIds, seasonRootNodes);
             MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
             mythicPlusProfileRepository.save(profile);
-            saveProfileWithSeasons(seasonRootNodes, profile, gameDataLookups);
-
+            saveProfileWithSeasons(seasonsRawJson, profile);
             return profile;
 
-
-        } catch (
-                Exception e) { //TODO: mexer nessa dos tratamentos de erros, aqui estou lancando o erro pra cima e logando ao mesmo tempo
-            log.error("Error syncing mythic profile name={}, value={}", name, e.getMessage());
-            throw new RuntimeException("MythicPlusService: failed to sync mythic plus profile: " + e.getMessage(), e);
+        } catch (BlizzardSyncException e) {
+            throw e;
         }
-
     }
 
-    private JsonNode fetchMythicProfileRoot(String realm, String name) {
+    private String fetchMythicProfileRoot(String realm, String name) {
         try {
-            String rawMythicProfileJson = blizzardApiService.getMythicCharacterProfile(realm, name).block();
-            return objectMapper.readTree(rawMythicProfileJson);
-
+            return blizzardApiService.getMythicCharacterProfile(realm, name).block();
         } catch (Exception e) {
-            throw new RuntimeException("fetchMythicProfileRoot: failed to fetch MythicCharacterProfile: " + e.getMessage(), e);
+            throw new BlizzardSyncException("failed to sync character mythic profile name=%s at %s ".formatted(name, realm), e);
         }
     }
 
@@ -78,38 +75,41 @@ public class MythicPlusService {
         return seasonIds;
     }
 
-    private List<JsonNode> fetchSeasonNodes(String realm, String characterName, List<Integer> seasonIds) {
-        List<String> rawSeasonJsons = blizzardApiService.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
-                .blockOptional()
-                .orElse(Collections.emptyList());
-        return rawSeasonJsons.stream()
-                .map(raw -> {
-                    try {
-                        return objectMapper.readTree(raw);
-                    } catch (Exception e) {
-                        throw new RuntimeException("MythicPlusService - fetchSeasonNodes: failed to fetch MythicCharacterProfile: " + e.getMessage(), e);
-                    }
-                })
-                .toList();
+    private List<String> fetchSeasonsRawJson(String realm, String characterName, List<Integer> seasonIds) {
+        try {
+            return blizzardApiService.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
+                    .blockOptional()
+                    .orElse(Collections.emptyList());
+        } catch (Exception e) {
+            throw new BlizzardSyncException("failed to sync season profiles for name=%s at %s".formatted(characterName, realm), e);
+        }
     }
 
-    private void saveProfileWithSeasons(List<JsonNode> seasonsRootNodes, MythicPlusProfile profile, GameDataFacadeService.GameDataLookup lookups) {
-        for (JsonNode seasonNode : seasonsRootNodes) {
-            Integer seasonId = seasonNode.path("season").path("id").asInt();
-            if (!lookups.seasonMap().containsKey(seasonId)) {
-                log.warn("Skipping season {} for profile {}: not found in database", seasonId, profile.getId());
-                continue;
-            }
-            MythicSeasonParser.SeasonParserResult result = mythicSeasonParser.parse(seasonNode, lookups.specializationMap(),
-                    lookups.seasonMap(), lookups.affixMap());
-            MythicSeason season = result.mythicSeason();
-            season.setProfile(profile);
-            season = mythicSeasonRepository.save(season);
+    private void saveProfileWithSeasons(List<String> seasonsRawJson, MythicPlusProfile profile) {
+        for (String rawJson : seasonsRawJson) {
+            try {
+                JsonNode seasonRoot = objectMapper.readTree(rawJson);
+                SeasonParserResult result = mythicSeasonParser.parse(seasonRoot);
 
-            for (KeystoneRun run : result.keystoneRuns()) {
-                run.setMythicSeason(season);
-                keystoneRunRepository.save(run);
+                MythicSeason season = result.mythicSeason();
+                season.setProfile(profile);
+                season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
+                season = mythicSeasonRepository.save(season);
+
+                for (KeystoneRun run : result.keystoneRuns()) {
+                    run.setMythicSeason(season);
+                    keystoneRunRepository.save(run);
+                }
+
+            } catch (BlizzardParsingException e) {
+                log.error("failed to parse season for profile id={}", profile.getId(), e);
+            } catch (DataAccessException e) {
+                log.error("failed to save season for profile id={}", profile.getId(), e);
+            } catch (Exception e) {
+                log.error("failed to process season for profile id={}", profile.getId(), e);
             }
+
+
         }
     }
 

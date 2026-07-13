@@ -1,6 +1,5 @@
 package com.yhr.smcp.entities.character.mythicplus;
 
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,13 +32,8 @@ public class KeystoneRun {
     private Instant duration;
     private Integer level;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_mythic_run_affixes",
-            joinColumns = @JoinColumn(name = "keystone_run_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "affixes_id", nullable = false)
-    )
-    private List<KeystoneAffix> affixes = new ArrayList<>();
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Integer> affixIds = new ArrayList<>();
 
     @JdbcTypeCode(SqlTypes.JSON)
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();

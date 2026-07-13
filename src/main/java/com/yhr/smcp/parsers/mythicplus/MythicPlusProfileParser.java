@@ -25,7 +25,7 @@ public class MythicPlusProfileParser {
             throw e;
         } catch (Exception e) {
             throw new BlizzardParsingException("MythicPlusProfileParser", "profile=" + profileRoot.path("character")
-                    .path("name"), e);
+                    .path("name").asString(), e);
         }
     }
 }

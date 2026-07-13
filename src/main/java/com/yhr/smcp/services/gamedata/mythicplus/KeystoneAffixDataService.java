@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -51,6 +53,10 @@ public class KeystoneAffixDataService {
 
     public KeystoneAffix findKeystoneAffixById(Integer affixId) {
         return keystoneAffixRepository.findById(affixId).orElse(null);
+    }
+
+    public List<KeystoneAffix> findAllKeystoneAffixByIds(List<Integer> affixIds) {
+        return keystoneAffixRepository.findAllById(affixIds);
     }
 
     private String fetchAffixesIndex() {
