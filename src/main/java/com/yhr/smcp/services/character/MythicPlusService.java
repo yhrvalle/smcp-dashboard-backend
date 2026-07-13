@@ -3,6 +3,7 @@ package com.yhr.smcp.services.character;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.mythicplus.MythicPlusProfileParser;
 import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser;
@@ -15,6 +16,7 @@ import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -45,15 +47,15 @@ public class MythicPlusService {
             String mythicProfileRawJson = fetchMythicProfileRoot(realm, name);
             JsonNode mythicProfileRoot = objectMapper.readTree(mythicProfileRawJson);
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
-            List<JsonNode> seasonRootNodes = fetchSeasonNodes(realm, name, seasonIds);
+            List<String> seasonsRawJson = fetchSeasonsRawJson(realm, name, seasonIds);
 
             MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
             mythicPlusProfileRepository.save(profile);
-            saveProfileWithSeasons(seasonRootNodes, profile);
+            saveProfileWithSeasons(seasonsRawJson, profile);
             return profile;
 
-        } catch (Exception e) {
-            throw new BlizzardSyncException("failed to sync mythic plus profile for %s at %s".formatted(name, realm), e);
+        } catch (BlizzardSyncException e) {
+            throw e;
         }
     }
 
@@ -73,39 +75,41 @@ public class MythicPlusService {
         return seasonIds;
     }
 
-    private List<JsonNode> fetchSeasonNodes(String realm, String characterName, List<Integer> seasonIds) {
+    private List<String> fetchSeasonsRawJson(String realm, String characterName, List<Integer> seasonIds) {
         try {
-            List<String> rawSeasonJsons = blizzardApiService.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
+            return blizzardApiService.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
                     .blockOptional()
                     .orElse(Collections.emptyList());
-            return rawSeasonJsons.stream()
-                    .map(raw -> {
-                        try {
-                            return objectMapper.readTree(raw);
-                        } catch (Exception e) {
-                            throw new RuntimeException("MythicPlusService - fetchSeasonNodes: failed to fetch MythicCharacterProfile: " + e.getMessage(), e);
-                        }
-                    })
-                    .toList();
-
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to sync season profiles for name=%s at %s".formatted(characterName, realm), e);
         }
     }
 
-    private void saveProfileWithSeasons(List<JsonNode> seasonsRootNodes, MythicPlusProfile profile) {
-        for (JsonNode seasonNode : seasonsRootNodes) {
-            SeasonParserResult result = mythicSeasonParser.parse(seasonNode);
+    private void saveProfileWithSeasons(List<String> seasonsRawJson, MythicPlusProfile profile) {
+        for (String rawJson : seasonsRawJson) {
+            try {
+                JsonNode seasonRoot = objectMapper.readTree(rawJson);
+                SeasonParserResult result = mythicSeasonParser.parse(seasonRoot);
 
-            MythicSeason season = result.mythicSeason();
-            season.setProfile(profile);
-            season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
-            season = mythicSeasonRepository.save(season);
+                MythicSeason season = result.mythicSeason();
+                season.setProfile(profile);
+                season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
+                season = mythicSeasonRepository.save(season);
 
-            for (KeystoneRun run : result.keystoneRuns()) {
-                run.setMythicSeason(season);
-                keystoneRunRepository.save(run);
+                for (KeystoneRun run : result.keystoneRuns()) {
+                    run.setMythicSeason(season);
+                    keystoneRunRepository.save(run);
+                }
+
+            } catch (BlizzardParsingException e) {
+                log.error("failed to parse season for profile id={}", profile.getId(), e);
+            } catch (DataAccessException e) {
+                log.error("failed to save season for profile id={}", profile.getId(), e);
+            } catch (Exception e) {
+                log.error("failed to process season for profile id={}", profile.getId(), e);
             }
+
+
         }
     }
 

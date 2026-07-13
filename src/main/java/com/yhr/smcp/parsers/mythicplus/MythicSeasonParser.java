@@ -2,9 +2,6 @@ package com.yhr.smcp.parsers.mythicplus;
 
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
-import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
-import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.util.mythic.RatingColors;
 import lombok.AllArgsConstructor;
@@ -13,7 +10,6 @@ import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @AllArgsConstructor
