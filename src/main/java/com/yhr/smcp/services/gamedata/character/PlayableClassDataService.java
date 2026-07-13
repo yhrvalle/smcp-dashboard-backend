@@ -22,6 +22,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class PlayableClassDataService {
+    //TODO: sera q separar services de class e spec?
     private final PlayableClassRepository playableClassRepository;
     private final PlayableSpecializationRepository playableSpecializationRepository;
 
@@ -68,6 +69,10 @@ public class PlayableClassDataService {
 
     public PlayableSpecialization findPlayableSpecializationById(Integer id) {
         return playableSpecializationRepository.findById(id).orElse(null);
+    }
+    
+    public List<PlayableSpecialization> findAllPlayableSpecializationsByIds(List<Integer> ids) {
+        return playableSpecializationRepository.findAllById(ids);
     }
 
     private String fetchClassIndex() {
