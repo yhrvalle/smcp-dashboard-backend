@@ -1,8 +1,6 @@
 package com.yhr.smcp.controllers.character;
 
 import com.yhr.smcp.entities.character.CharacterProfile;
-import com.yhr.smcp.entities.guild.GuildMember;
-import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.services.character.CharacterService;
 import com.yhr.smcp.services.character.MythicPlusService;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +25,5 @@ public class MemberController {
         CharacterProfile charProfile = characterService.syncCharacter(realm, characterName);
         return ResponseEntity.ok(charProfile);
     }
-
-    @PostMapping(value = "mplus/{realm}/{characterName}/sync")
-    public ResponseEntity<MythicPlusProfile> syncMythicPlusProfile(
-            @PathVariable String realm,
-            @PathVariable String characterName) {
-        MythicPlusProfile profile = mythicPlusService.syncProfile(realm, characterName);
-        return ResponseEntity.ok(profile);
-    }
-
-
+    
 }

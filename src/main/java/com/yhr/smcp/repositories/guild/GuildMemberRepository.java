@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface GuildMemberRepository extends JpaRepository<GuildMember, Long> {
     public Page<GuildMember> findByGuildId(Long guildId, Pageable pageable);
 
-    public Optional<GuildMember> findByRealmAndName(String realm, String name);
+    public Optional<GuildMember> findByRealmAndNameIgnoreCase(String realm, String name);
 }

@@ -1,6 +1,5 @@
 package com.yhr.smcp.services.character;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
@@ -43,14 +42,20 @@ public class MythicPlusService {
     private final KeystoneRunRepository keystoneRunRepository;
 
     @Transactional
-    public MythicPlusProfile syncProfile(String realm, String name) {
+    public MythicPlusProfile syncProfile(String realm, String name, Long existingProfileId) {
         try {
             String mythicProfileRawJson = fetchMythicProfileRoot(realm, name);
             JsonNode mythicProfileRoot = objectMapper.readTree(mythicProfileRawJson);
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
             List<String> seasonsRawJson = fetchSeasonsRawJson(realm, name, seasonIds);
 
-            MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
+            MythicPlusProfile parsed = mythicPlusProfileParser.parse(mythicProfileRoot);
+            MythicPlusProfile profile = existingProfileId != null
+                    ? mythicPlusProfileRepository.getReferenceById(existingProfileId)
+                    : new MythicPlusProfile();
+
+            profile.setCurrentMythicRating(parsed.getCurrentMythicRating());
+            profile.setRatingColor(parsed.getRatingColor());
             mythicPlusProfileRepository.save(profile);
             saveProfileWithSeasons(seasonsRawJson, profile);
             return profile;

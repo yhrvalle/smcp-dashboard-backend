@@ -31,15 +31,18 @@ public class CharacterService {
 
     public CharacterProfile syncCharacter(String realm, String characterName) {
         try {
-            GuildMember guildMember = guildMemberRepository.findByRealmAndName(realm, characterName)
+            GuildMember guildMember = guildMemberRepository.findByRealmAndNameIgnoreCase(realm, characterName)
                     .orElseThrow(() -> new BlizzardSyncException("guild member not found in guild, name=%s at %s"
                             .formatted(characterName, realm), null));
 
             String rawJson = fetchCharacterProfile(realm, characterName);
             JsonNode characterRoot = objectMapper.readTree(rawJson);
             CharacterProfile characterProfile = characterParser.parse(characterRoot);
+            Long existingProfileId = characterRepository.findMythicPlusProfileIdById(guildMember.getId()).orElse(null);
+            MythicPlusProfile mythicPlusProfile = mythicPlusService.syncProfile(realm, characterName, existingProfileId);
 
-            MythicPlusProfile mythicPlusProfile = mythicPlusService.syncProfile(realm, characterName);
+            characterProfile.setId(guildMember.getId());
+
             characterProfile.setMythicPlusProfile(mythicPlusProfile);
             characterProfile.setGuildMember(guildMember);
 
