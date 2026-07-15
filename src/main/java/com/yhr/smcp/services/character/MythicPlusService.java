@@ -1,5 +1,6 @@
 package com.yhr.smcp.services.character;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
@@ -54,9 +55,12 @@ public class MythicPlusService {
             saveProfileWithSeasons(seasonsRawJson, profile);
             return profile;
 
-        } catch (BlizzardSyncException e) {
+        } catch (BlizzardSyncException | BlizzardParsingException e) {
             throw e;
+        } catch (DataAccessException e) {
+            throw new BlizzardSyncException("failed to save mythic plus profile for %s at %s".formatted(name, realm), e);
         }
+
     }
 
     private String fetchMythicProfileRoot(String realm, String name) {
@@ -100,7 +104,6 @@ public class MythicPlusService {
                     run.setMythicSeason(season);
                     keystoneRunRepository.save(run);
                 }
-
             } catch (BlizzardParsingException e) {
                 log.error("failed to parse season for profile id={}", profile.getId(), e);
             } catch (DataAccessException e) {
