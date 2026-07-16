@@ -1,11 +1,11 @@
 package com.yhr.smcp.services.gamedata.character;
 
+import com.yhr.smcp.client.BlizzardStaticApiClient;
 import com.yhr.smcp.entities.gamedata.character.PlayableRace;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.character.PlayableRaceParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableRaceRepository;
-import com.yhr.smcp.services.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -17,7 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 @Slf4j
 @RequiredArgsConstructor
 public class PlayableRaceDataService {
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardStaticApiClient blizzardStaticApiClient;
     private final ObjectMapper objectMapper;
     private final PlayableRaceRepository playableRaceRepository;
     private final PlayableRaceParser playableRaceParser;
@@ -51,7 +51,7 @@ public class PlayableRaceDataService {
 
     private String fetchRacesIndex() {
         try {
-            return blizzardApiService.getRaceIndex().block();
+            return blizzardStaticApiClient.getRaceIndex().block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to fetch playable races indexes", e);
         }

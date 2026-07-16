@@ -1,5 +1,6 @@
 package com.yhr.smcp.services.character;
 
+import com.yhr.smcp.client.BlizzardProfileApiClient;
 import com.yhr.smcp.entities.character.CharacterProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.guild.GuildMember;
@@ -8,7 +9,6 @@ import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.character.CharacterParser;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.repositories.guild.GuildMemberRepository;
-import com.yhr.smcp.services.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import tools.jackson.databind.ObjectMapper;
 @Slf4j
 @RequiredArgsConstructor
 public class CharacterService {
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardProfileApiClient blizzardProfileApiClient;
     private final ObjectMapper objectMapper;
 
     private final GuildMemberRepository guildMemberRepository;
@@ -79,7 +79,7 @@ public class CharacterService {
 
     private String fetchCharacterProfile(String realm, String characterName) {
         try {
-            return blizzardApiService.getCharacter(realm, characterName).block();
+            return blizzardProfileApiClient.getCharacter(realm, characterName).block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to sync character profile name=%s at %s".formatted(characterName, realm), e);
         }

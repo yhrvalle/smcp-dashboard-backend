@@ -1,5 +1,6 @@
 package com.yhr.smcp.services.character;
 
+import com.yhr.smcp.client.BlizzardProfileApiClient;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
@@ -11,7 +12,6 @@ import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser.SeasonParserResult;
 import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicPlusProfileRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
-import com.yhr.smcp.services.BlizzardApiService;
 import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MythicPlusService {
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardProfileApiClient blizzardProfileApiClient;
     private final ObjectMapper objectMapper;
 
     private final MythicPlusProfileParser mythicPlusProfileParser;
@@ -70,7 +70,7 @@ public class MythicPlusService {
 
     private String fetchMythicProfileRoot(String realm, String name) {
         try {
-            return blizzardApiService.getMythicCharacterProfile(realm, name).block();
+            return blizzardProfileApiClient.getMythicCharacterProfile(realm, name).block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to sync character mythic profile name=%s at %s ".formatted(name, realm), e);
         }
@@ -86,7 +86,7 @@ public class MythicPlusService {
 
     private List<String> fetchSeasonsRawJson(String realm, String characterName, List<Integer> seasonIds) {
         try {
-            return blizzardApiService.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
+            return blizzardProfileApiClient.getCharacterSeasonsProfiles(realm, characterName, seasonIds)
                     .blockOptional()
                     .orElse(Collections.emptyList());
         } catch (Exception e) {

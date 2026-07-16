@@ -1,5 +1,6 @@
 package com.yhr.smcp.services.guild;
 
+import com.yhr.smcp.client.BlizzardProfileApiClient;
 import com.yhr.smcp.entities.guild.Guild;
 import com.yhr.smcp.entities.guild.GuildMember;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
@@ -7,7 +8,6 @@ import com.yhr.smcp.parsers.guild.GuildMemberParser;
 import com.yhr.smcp.parsers.guild.GuildParser;
 import com.yhr.smcp.repositories.guild.GuildMemberRepository;
 import com.yhr.smcp.repositories.guild.GuildRepository;
-import com.yhr.smcp.services.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,17 +15,16 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class GuildService {
     private final GuildRepository guildRepository;
     private final GuildMemberRepository guildMemberRepository;
-    private final BlizzardApiService blizzardApiService;
+
+    private final BlizzardProfileApiClient blizzardProfileApiClient;
     private final ObjectMapper objectMapper;
+
     private final GuildParser guildParser;
     private final GuildMemberParser guildMemberParser;
 
@@ -40,7 +39,7 @@ public class GuildService {
 
     private Guild fetchGuildAndSave(String realm, String guildSlug) {
         try {
-            String rawJson = blizzardApiService.getGuild(realm, guildSlug).block(); // checar se esse metodo da blizzard aceita guildId
+            String rawJson = blizzardProfileApiClient.getGuild(realm, guildSlug).block(); // checar se esse metodo da blizzard aceita guildId
             JsonNode guildRoot = objectMapper.readTree(rawJson);
             Guild guild = guildParser.parse(guildRoot);
             return guildRepository.save(guild);
@@ -51,7 +50,7 @@ public class GuildService {
 
     private void syncGuildRoster(String realm, String guildSlug, Guild guild) {
         try {
-            String rawJson = blizzardApiService.getGuildRoster(realm, guildSlug).block();
+            String rawJson = blizzardProfileApiClient.getGuildRoster(realm, guildSlug).block();
             JsonNode rosterRoot = objectMapper.readTree(rawJson);
             rosterRoot.path("members").forEach(member -> {
                 try {
