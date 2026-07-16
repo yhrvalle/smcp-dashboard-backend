@@ -1,11 +1,11 @@
 package com.yhr.smcp.services.gamedata.mythicplus;
 
+import com.yhr.smcp.client.BlizzardStaticApiClient;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneAffixParser;
 import com.yhr.smcp.repositories.gamedata.mythicplus.KeystoneAffixRepository;
-import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -21,7 +21,7 @@ import java.util.List;
 public class KeystoneAffixDataService {
     private final KeystoneAffixRepository keystoneAffixRepository;
     private final KeystoneAffixParser keystoneAffixParser;
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardStaticApiClient blizzardStaticApiClient;
     private final ObjectMapper objectMapper;
 
     public void syncKeystoneAffixes() {
@@ -34,7 +34,7 @@ public class KeystoneAffixDataService {
                 return;
             }
             try {
-                String affixDetailsJson = blizzardApiService.getAffixDetails(affixId).block();
+                String affixDetailsJson = blizzardStaticApiClient.getAffixDetails(affixId).block();
                 JsonNode affixRoot = objectMapper.readTree(affixDetailsJson);
                 KeystoneAffix keystoneAffix = keystoneAffixParser.parse(affixRoot);
                 keystoneAffixRepository.save(keystoneAffix);
@@ -58,7 +58,7 @@ public class KeystoneAffixDataService {
 
     private String fetchAffixesIndex() {
         try {
-            return blizzardApiService.getAffixIndex().block();
+            return blizzardStaticApiClient.getAffixIndex().block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to fetch affixes indexes", e);
         }

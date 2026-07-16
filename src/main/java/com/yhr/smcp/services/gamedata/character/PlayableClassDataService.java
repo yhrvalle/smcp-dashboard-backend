@@ -1,5 +1,6 @@
 package com.yhr.smcp.services.gamedata.character;
 
+import com.yhr.smcp.client.BlizzardStaticApiClient;
 import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
@@ -8,7 +9,6 @@ import com.yhr.smcp.parsers.gamedata.character.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.character.PlayableSpecializationsParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
 import com.yhr.smcp.repositories.gamedata.character.PlayableSpecializationRepository;
-import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -29,7 +29,7 @@ public class PlayableClassDataService {
     private final PlayableClassesParser playableClassesParser;
     private final PlayableSpecializationsParser playableSpecializationsParser;
 
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardStaticApiClient blizzardStaticApiClient;
     private final ObjectMapper objectMapper;
 
     public void syncPlayableClasses() {
@@ -42,7 +42,7 @@ public class PlayableClassDataService {
                 return;
             }
             try {
-                String classDetailsJson = blizzardApiService.getPlayableClass(classId).block();
+                String classDetailsJson = blizzardStaticApiClient.getPlayableClass(classId).block();
                 JsonNode detailsRoot = objectMapper.readTree(classDetailsJson);
 
                 PlayableClass playableClass = playableClassesParser.parse(detailsRoot);
@@ -77,7 +77,7 @@ public class PlayableClassDataService {
 
     private String fetchClassIndex() {
         try {
-            return blizzardApiService.getPlayableClassesIndex().block();
+            return blizzardStaticApiClient.getPlayableClassesIndex().block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to fetch playable classes indexes", e);
         }
