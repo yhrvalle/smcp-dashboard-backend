@@ -12,8 +12,8 @@ import java.util.List;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class BlizzardProfileApiClient {
-    private WebClient blizzardWebClient;
+public class BlizzardProfileApiClient { //TODO: make it parallel
+    private final WebClient blizzardWebClient;
 
     public Mono<String> getGuild(String realm, String guildSlug) {
         return blizzardWebClient.get()
