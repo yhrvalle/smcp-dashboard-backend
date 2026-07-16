@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class BlizzardStaticApiClient {
+public class BlizzardStaticApiClient { //TODO: make it parallel
     private final WebClient blizzardWebClient;
 
     public Mono<String> getPlayableClassesIndex() {

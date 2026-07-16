@@ -1,10 +1,10 @@
 package com.yhr.smcp.services.gamedata.mythicplus;
 
+import com.yhr.smcp.client.BlizzardDynamicApiClient;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneSeasonParser;
 import com.yhr.smcp.repositories.gamedata.mythicplus.KeystoneSeasonsRepository;
-import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -17,7 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class KeystoneSeasonDataService {
     private final KeystoneSeasonsRepository keystoneSeasonsRepository;
-    private final BlizzardApiService blizzardApiService;
+    private final BlizzardDynamicApiClient blizzardDynamicApiClient;
     private final KeystoneSeasonParser keystoneSeasonParser;
     private final ObjectMapper objectMapper;
 
@@ -30,7 +30,7 @@ public class KeystoneSeasonDataService {
                 return;
             }
             try {
-                String seasonDetailsJson = blizzardApiService.getSeasonDetails(seasonId).block();
+                String seasonDetailsJson = blizzardDynamicApiClient.getSeasonDetails(seasonId).block();
                 JsonNode seasonRoot = objectMapper.readTree(seasonDetailsJson);
                 KeystoneSeason keystoneSeason = keystoneSeasonParser.parse(seasonRoot);
                 keystoneSeasonsRepository.save(keystoneSeason);
@@ -51,7 +51,7 @@ public class KeystoneSeasonDataService {
 
     private String fetchSeasonIndex() {
         try {
-            return blizzardApiService.getSeasonIndex().block();
+            return blizzardDynamicApiClient.getSeasonIndex().block();
         } catch (Exception e) {
             throw new BlizzardSyncException("failed to fetch season indexes", e);
         }

@@ -73,22 +73,6 @@ public class BlizzardApiService { //TODO: separar os namespaces em arquivos dife
                         }))
                 .collectList();
     }
-    
 
-    // -- M+ SEASON --
-
-    public Mono<String> getSeasonIndex() {
-        return blizzardWebClient.get()
-                .uri("https://us.api.blizzard.com/data/wow/mythic-keystone/season/index?namespace=dynamic-us&locale=en_US")
-                .retrieve()
-                .bodyToMono(String.class);
-    }
-
-    public Mono<String> getSeasonDetails(Integer seasonId) {
-        return blizzardWebClient.get()
-                .uri("https://us.api.blizzard.com/data/wow/mythic-keystone/season/" + seasonId + "?namespace=dynamic-us&locale=en_US")
-                .retrieve()
-                .bodyToMono(String.class);
-    }
 }
 
