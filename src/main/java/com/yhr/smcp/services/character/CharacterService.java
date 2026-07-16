@@ -8,7 +8,7 @@ import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.character.CharacterParser;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.repositories.guild.GuildMemberRepository;
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

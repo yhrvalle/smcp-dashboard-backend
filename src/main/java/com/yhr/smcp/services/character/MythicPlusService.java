@@ -11,7 +11,7 @@ import com.yhr.smcp.parsers.mythicplus.MythicSeasonParser.SeasonParserResult;
 import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicPlusProfileRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import com.yhr.smcp.services.gamedata.mythicplus.KeystoneSeasonDataService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

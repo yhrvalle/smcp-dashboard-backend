@@ -4,7 +4,7 @@ import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.mythicplus.KeystoneSeasonParser;
 import com.yhr.smcp.repositories.gamedata.mythicplus.KeystoneSeasonsRepository;
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;

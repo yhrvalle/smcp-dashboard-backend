@@ -1,8 +1,7 @@
 package com.yhr.smcp.controllers;
 
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +42,6 @@ public class BlizzardApiController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
-    
+
 
 }

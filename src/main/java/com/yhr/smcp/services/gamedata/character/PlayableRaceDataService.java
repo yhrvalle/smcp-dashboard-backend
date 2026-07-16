@@ -5,7 +5,7 @@ import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.gamedata.character.PlayableRaceParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableRaceRepository;
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;

@@ -8,7 +8,7 @@ import com.yhr.smcp.parsers.gamedata.character.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.character.PlayableSpecializationsParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
 import com.yhr.smcp.repositories.gamedata.character.PlayableSpecializationRepository;
-import com.yhr.smcp.services.BlizzardApiService;
+import com.yhr.smcp.client.BlizzardApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -70,7 +70,7 @@ public class PlayableClassDataService {
     public PlayableSpecialization findPlayableSpecializationById(Integer id) {
         return playableSpecializationRepository.findById(id).orElse(null);
     }
-    
+
     public List<PlayableSpecialization> findAllPlayableSpecializationsByIds(List<Integer> ids) {
         return playableSpecializationRepository.findAllById(ids);
     }
