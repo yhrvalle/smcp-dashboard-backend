@@ -6,7 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 
 public interface MythicSeasonRepository extends JpaRepository<MythicSeason, Long> {
     Page<MythicSeason> findByProfileId(Long profileId, Pageable pageable);
+
+    Optional<MythicSeason> findByProfileIdAndKeystoneSeasonId(Long profileId, Integer keystoneSeasonId);
 }

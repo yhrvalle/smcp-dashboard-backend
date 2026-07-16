@@ -100,13 +100,28 @@ public class MythicPlusService {
                 JsonNode seasonRoot = objectMapper.readTree(rawJson);
                 SeasonParserResult result = mythicSeasonParser.parse(seasonRoot);
 
-                MythicSeason season = result.mythicSeason();
+
+                MythicSeason season = mythicSeasonRepository.findByProfileIdAndKeystoneSeasonId(profile.getId(), result.seasonId())
+                        .orElseGet(MythicSeason::new);
+
                 season.setProfile(profile);
                 season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
+                season.setSeasonRating(result.mythicSeason().getSeasonRating());
+                season.setRatingColor(result.mythicSeason().getRatingColor());
                 season = mythicSeasonRepository.save(season);
-
-                for (KeystoneRun run : result.keystoneRuns()) {
+                for (KeystoneRun parsedRun : result.keystoneRuns()) {
+                    KeystoneRun run = keystoneRunRepository.findByMythicSeasonIdAndDungeonName(season.getId(), parsedRun.getDungeonName())
+                            .orElseGet(KeystoneRun::new);
                     run.setMythicSeason(season);
+                    run.setDungeonName(parsedRun.getDungeonName());
+                    run.setLevel(parsedRun.getLevel());
+                    run.setIsTimed(parsedRun.getIsTimed());
+                    run.setDungeonMythicRating(parsedRun.getDungeonMythicRating());
+                    run.setRatingColor(parsedRun.getRatingColor());
+                    run.setCompletedTimestamp(parsedRun.getCompletedTimestamp());
+                    run.setDuration(parsedRun.getDuration());
+                    run.setAffixIds(parsedRun.getAffixIds());
+                    run.setMembers(parsedRun.getMembers());
                     keystoneRunRepository.save(run);
                 }
             } catch (BlizzardParsingException e) {

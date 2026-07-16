@@ -9,6 +9,7 @@ import com.yhr.smcp.parsers.character.CharacterParser;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.repositories.guild.GuildMemberRepository;
 import com.yhr.smcp.services.BlizzardApiService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -29,6 +30,7 @@ public class CharacterService {
 
     private final MythicPlusService mythicPlusService;
 
+    @Transactional
     public CharacterProfile syncCharacter(String realm, String characterName) {
         try {
             GuildMember guildMember = guildMemberRepository.findByRealmAndNameIgnoreCase(realm, characterName)
@@ -37,16 +39,13 @@ public class CharacterService {
 
             String rawJson = fetchCharacterProfile(realm, characterName);
             JsonNode characterRoot = objectMapper.readTree(rawJson);
-            CharacterProfile characterProfile = characterParser.parse(characterRoot);
+            CharacterProfile parsedProfile = characterParser.parse(characterRoot);
+
             Long existingProfileId = characterRepository.findMythicPlusProfileIdById(guildMember.getId()).orElse(null);
             MythicPlusProfile mythicPlusProfile = mythicPlusService.syncProfile(realm, characterName, existingProfileId);
 
-            characterProfile.setId(guildMember.getId());
+            return saveCharacterProfile(guildMember, parsedProfile, mythicPlusProfile);
 
-            characterProfile.setMythicPlusProfile(mythicPlusProfile);
-            characterProfile.setGuildMember(guildMember);
-
-            return characterRepository.save(characterProfile);
         } catch (BlizzardSyncException e) {
             log.error("failed to sync character profile name={} at {}", characterName, realm, e);
             throw e;
@@ -60,6 +59,22 @@ public class CharacterService {
             throw new BlizzardSyncException("failed to sync character profile name=%s at %s".formatted(characterName, realm), e);
         }
 
+    }
+
+    private CharacterProfile saveCharacterProfile(GuildMember guildMember, CharacterProfile parsed, MythicPlusProfile mythicPlusProfile) {
+        CharacterProfile characterProfile = characterRepository.findById(guildMember.getId())
+                .orElseGet(CharacterProfile::new);
+
+        characterProfile.setActiveTitle(parsed.getActiveTitle());
+        characterProfile.setGender(parsed.getGender());
+        characterProfile.setFaction(parsed.getFaction());
+        characterProfile.setActiveSpecializationId(parsed.getActiveSpecializationId());
+        characterProfile.setItemLevel(parsed.getItemLevel());
+
+        characterProfile.setMythicPlusProfile(mythicPlusProfile);
+        characterProfile.setGuildMember(guildMember);
+
+        return characterRepository.save(characterProfile);
     }
 
     private String fetchCharacterProfile(String realm, String characterName) {
