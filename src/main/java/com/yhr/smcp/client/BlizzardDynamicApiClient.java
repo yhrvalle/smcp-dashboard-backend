@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class BlizzardDynamicApiClient {
-    private final WebClient blizzardWebClient;
+    private final WebClient blizzardWebClient; //TODO: make it parallel
 
     public Mono<String> getSeasonIndex() {
         return blizzardWebClient.get()

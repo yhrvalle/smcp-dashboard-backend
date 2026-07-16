@@ -13,11 +13,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api")
-public class BlizzardApiController {
+public class BlizzardApiController { //TODO: verify if its ok to remove, its just test endpoints
 
     private final BlizzardApiService blizzardApiService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE) //TODO: remover media type
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<String>> getGuild() {
         String realm = "azralon";
         String guildName = "send-me-cat-pics";
