@@ -42,21 +42,30 @@ public class MythicPlusService {
     private final KeystoneRunRepository keystoneRunRepository;
 
     @Transactional
-    public MythicPlusProfile syncProfile(String realm, String name) {
+    public MythicPlusProfile syncProfile(String realm, String name, Long existingProfileId) {
         try {
             String mythicProfileRawJson = fetchMythicProfileRoot(realm, name);
             JsonNode mythicProfileRoot = objectMapper.readTree(mythicProfileRawJson);
             List<Integer> seasonIds = extractSeasonsIds(mythicProfileRoot);
             List<String> seasonsRawJson = fetchSeasonsRawJson(realm, name, seasonIds);
 
-            MythicPlusProfile profile = mythicPlusProfileParser.parse(mythicProfileRoot);
+            MythicPlusProfile parsed = mythicPlusProfileParser.parse(mythicProfileRoot);
+            MythicPlusProfile profile = existingProfileId != null
+                    ? mythicPlusProfileRepository.getReferenceById(existingProfileId)
+                    : new MythicPlusProfile();
+
+            profile.setCurrentMythicRating(parsed.getCurrentMythicRating());
+            profile.setRatingColor(parsed.getRatingColor());
             mythicPlusProfileRepository.save(profile);
             saveProfileWithSeasons(seasonsRawJson, profile);
             return profile;
 
-        } catch (BlizzardSyncException e) {
+        } catch (BlizzardSyncException | BlizzardParsingException e) {
             throw e;
+        } catch (DataAccessException e) {
+            throw new BlizzardSyncException("failed to save mythic plus profile for %s at %s".formatted(name, realm), e);
         }
+
     }
 
     private String fetchMythicProfileRoot(String realm, String name) {
@@ -91,16 +100,30 @@ public class MythicPlusService {
                 JsonNode seasonRoot = objectMapper.readTree(rawJson);
                 SeasonParserResult result = mythicSeasonParser.parse(seasonRoot);
 
-                MythicSeason season = result.mythicSeason();
+
+                MythicSeason season = mythicSeasonRepository.findByProfileIdAndKeystoneSeasonId(profile.getId(), result.seasonId())
+                        .orElseGet(MythicSeason::new);
+
                 season.setProfile(profile);
                 season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
+                season.setSeasonRating(result.mythicSeason().getSeasonRating());
+                season.setRatingColor(result.mythicSeason().getRatingColor());
                 season = mythicSeasonRepository.save(season);
-
-                for (KeystoneRun run : result.keystoneRuns()) {
+                for (KeystoneRun parsedRun : result.keystoneRuns()) {
+                    KeystoneRun run = keystoneRunRepository.findByMythicSeasonIdAndDungeonName(season.getId(), parsedRun.getDungeonName())
+                            .orElseGet(KeystoneRun::new);
                     run.setMythicSeason(season);
+                    run.setDungeonName(parsedRun.getDungeonName());
+                    run.setLevel(parsedRun.getLevel());
+                    run.setIsTimed(parsedRun.getIsTimed());
+                    run.setDungeonMythicRating(parsedRun.getDungeonMythicRating());
+                    run.setRatingColor(parsedRun.getRatingColor());
+                    run.setCompletedTimestamp(parsedRun.getCompletedTimestamp());
+                    run.setDuration(parsedRun.getDuration());
+                    run.setAffixIds(parsedRun.getAffixIds());
+                    run.setMembers(parsedRun.getMembers());
                     keystoneRunRepository.save(run);
                 }
-
             } catch (BlizzardParsingException e) {
                 log.error("failed to parse season for profile id={}", profile.getId(), e);
             } catch (DataAccessException e) {

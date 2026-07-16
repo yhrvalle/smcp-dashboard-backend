@@ -45,10 +45,7 @@ public class KeystoneAffixDataService {
             } catch (Exception e) {
                 log.error("failed to sync affix id={}", affixId, e);
             }
-
-
         });
-
     }
 
     public KeystoneAffix findKeystoneAffixById(Integer affixId) {
