@@ -17,7 +17,7 @@ public class BlizzardDynamicApiClient { //TODO: make it parallel
                 .bodyToMono(String.class);
     }
 
-    public Mono<String> getSeasonDetails(Integer seasonId) {
+    public Mono<String> getSeasonDetails(Long seasonId) {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/mythic-keystone/season/" + seasonId + "?namespace=dynamic-us&locale=en_US")
                 .retrieve()

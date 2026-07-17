@@ -25,7 +25,7 @@ public class KeystoneSeasonDataService {
         String rawIndexJson = fetchSeasonIndex();
         JsonNode indexRoot = objectMapper.readTree(rawIndexJson);
         indexRoot.path("seasons").forEach(season -> {
-            Integer seasonId = season.path("id").asInt();
+            Long seasonId = season.path("id").asLong();
             if (keystoneSeasonsRepository.existsById(seasonId)) {
                 return;
             }
@@ -45,7 +45,7 @@ public class KeystoneSeasonDataService {
 
     }
 
-    public KeystoneSeason getReferenceById(Integer seasonId) {
+    public KeystoneSeason getReferenceById(Long seasonId) {
         return keystoneSeasonsRepository.findById(seasonId).orElse(null);
     }
 

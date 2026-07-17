@@ -1,6 +1,6 @@
 package com.yhr.smcp.dto.response.mythicplus;
 
-public record MythicPlusProfileResponseDTO(
+public record MythicPlusProfileDTO(
         Long id,
         Double currentMythicRating,
         String ratingColorHex

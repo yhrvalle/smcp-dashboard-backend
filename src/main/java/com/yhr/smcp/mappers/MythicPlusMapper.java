@@ -14,16 +14,16 @@ import java.util.Objects;
 
 public class MythicPlusMapper {
 
-    public static MythicPlusProfileResponseDTO buildMythicPlusProfileDTO(MythicPlusProfile mythicPlusProfile) {
-        return new MythicPlusProfileResponseDTO(
+    public static MythicPlusProfileDTO buildMythicPlusProfileDTO(MythicPlusProfile mythicPlusProfile) {
+        return new MythicPlusProfileDTO(
                 mythicPlusProfile.getId(),
                 mythicPlusProfile.getCurrentMythicRating(),
                 mythicPlusProfile.getRatingColor()
         );
     }
 
-    public static MythicSeasonResponseDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
-        return new MythicSeasonResponseDTO(
+    public static MythicSeasonDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
+        return new MythicSeasonDTO(
                 mythicSeason.getId(),
                 mythicSeason.getSeasonRating(),
                 mythicSeason.getRatingColor(),
