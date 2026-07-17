@@ -21,13 +21,12 @@ public class CharacterProfileController {
         return ResponseEntity.ok(characterProfileDTO);
     }
 
-    //TODO: retornar DTO
     @PostMapping(value = "/{realm}/{characterName}/character/sync")
-    public ResponseEntity<CharacterProfile> syncMember(
+    public ResponseEntity<CharacterProfileDTO> syncMember(
             @PathVariable String realm,
             @PathVariable String characterName) {
 
-        CharacterProfile charProfile = characterService.syncCharacter(realm, characterName);
-        return ResponseEntity.ok(charProfile);
+        CharacterProfile character = characterService.syncCharacter(realm, characterName);
+        return ResponseEntity.ok(characterProfileQueryService.getCharacterProfile(character.getId()));
     }
 }
