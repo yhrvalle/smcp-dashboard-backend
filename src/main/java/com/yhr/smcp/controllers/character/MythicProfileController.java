@@ -38,14 +38,14 @@ public class MythicProfileController {
     }
 
     @GetMapping("/{id}/season/{seasonId}/runs")
-    public ResponseEntity<Page<KeystoneRunDTO>> getMythicSeason(@PathVariable Long id, @PathVariable Long seasonId, Pageable pageable) {
+    public ResponseEntity<Page<KeystoneRunDTO>> getKeystoneRuns(@PathVariable Long id, @PathVariable Long seasonId, Pageable pageable) {
         MythicSeasonDTO season = mythicSeasonQueryService.getCharacterMythicSeason(id, seasonId);
         Page<KeystoneRunDTO> runs = keystoneRunQueryService.getRunsBySeason(season.id(), pageable);
         return ResponseEntity.ok(runs);
     }
 
     @GetMapping("/{id}/season/{seasonId}/runs/{runId}")
-    public ResponseEntity<KeystoneRunDetailDTO> getRunDetail(@PathVariable Long id, @PathVariable Long seasonId, @PathVariable Long runId) {
+    public ResponseEntity<KeystoneRunDetailDTO> getKeystoneRunDetail(@PathVariable Long id, @PathVariable Long seasonId, @PathVariable Long runId) {
         return ResponseEntity.ok(keystoneRunQueryService.getRunDetailById(runId));
     }
 
