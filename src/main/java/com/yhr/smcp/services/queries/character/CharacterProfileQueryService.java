@@ -6,6 +6,7 @@ import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.entities.gamedata.character.PlayableRace;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.entities.guild.GuildMember;
+import com.yhr.smcp.exceptions.ResourceNotFoundException;
 import com.yhr.smcp.mappers.CharacterMapper;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
@@ -24,7 +25,7 @@ public class CharacterProfileQueryService {
 
     public CharacterProfileDTO getCharacterProfile(Long id) {
         CharacterProfile profile = characterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("CharacterProfileQueryService, character " + id + " not found!")
+                .orElseThrow(() -> new ResourceNotFoundException("character id=" + id)
                 );
         String className = getClassName(profile.getGuildMember());
         String raceName = getRaceName(profile.getGuildMember());

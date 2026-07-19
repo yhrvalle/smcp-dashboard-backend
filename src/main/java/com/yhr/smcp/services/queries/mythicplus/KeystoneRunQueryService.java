@@ -6,6 +6,7 @@ import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneAffix;
+import com.yhr.smcp.exceptions.ResourceNotFoundException;
 import com.yhr.smcp.mappers.MythicPlusMapper;
 import com.yhr.smcp.repositories.character.mythicplus.KeystoneRunRepository;
 import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
@@ -36,7 +37,7 @@ public class KeystoneRunQueryService {
     }
 
     public KeystoneRunDetailDTO getRunDetailById(Long runId) {
-        KeystoneRun run = keystoneRunRepository.findById(runId).orElseThrow(() -> new RuntimeException("keystoneRunQueryService, run not found id=" + runId));
+        KeystoneRun run = keystoneRunRepository.findById(runId).orElseThrow(() -> new ResourceNotFoundException("id=" + runId));
         Map<Integer, KeystoneAffix> affixMap = getAffixMap(List.of(run));
         Map<Integer, PlayableSpecialization> specializationMap = getSpecializationMap(List.of(run));
 
