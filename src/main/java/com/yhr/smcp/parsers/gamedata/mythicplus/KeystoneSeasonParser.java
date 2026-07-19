@@ -11,7 +11,7 @@ import java.time.Instant;
 public class KeystoneSeasonParser {
     public KeystoneSeason parse(JsonNode seasonNode) {
         try {
-            Integer id = seasonNode.path("id").asInt();
+            Long id = seasonNode.path("id").asLong();
 
             long startMilliSeconds = seasonNode.path("start_timestamp").asLong();
             Instant startTimestamp = Instant.ofEpochMilli(startMilliSeconds);

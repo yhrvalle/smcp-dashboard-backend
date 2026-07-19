@@ -18,7 +18,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class KeystoneSeason {
     @Id
-    private Integer id;
+    private Long id;
     private Instant startTimestamp;
     private Instant endTimestamp;
     private String name;

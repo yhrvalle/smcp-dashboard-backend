@@ -1,7 +1,7 @@
 package com.yhr.smcp.services.queries.mythicplus;
 
-import com.yhr.smcp.dto.response.mythicplus.KeystoneRunDetailResponseDTO;
-import com.yhr.smcp.dto.response.mythicplus.KeystoneRunResponseDTO;
+import com.yhr.smcp.dto.response.mythicplus.KeystoneRunDTO;
+import com.yhr.smcp.dto.response.mythicplus.KeystoneRunDetailDTO;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneMember;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
@@ -28,15 +28,15 @@ public class KeystoneRunQueryService {
     private final PlayableClassDataService playableClassDataService;
 
 
-    public Page<KeystoneRunResponseDTO> getRunsBySeason(Long seasonId, Pageable pageable) {
+    public Page<KeystoneRunDTO> getRunsBySeason(Long seasonId, Pageable pageable) {
         Page<KeystoneRun> runs = keystoneRunRepository.findByMythicSeasonId(seasonId, pageable);
         Map<Integer, KeystoneAffix> affixMap = getAffixMap(runs.getContent());
 
         return runs.map(run -> MythicPlusMapper.buildKeystoneRunDTO(run, affixMap));
     }
 
-    public KeystoneRunDetailResponseDTO getRunDetailById(Long runId) {
-        KeystoneRun run = keystoneRunRepository.findById(runId).orElseThrow(() -> new RuntimeException("keystoneRunQueryService, run not found id={}" + runId));
+    public KeystoneRunDetailDTO getRunDetailById(Long runId) {
+        KeystoneRun run = keystoneRunRepository.findById(runId).orElseThrow(() -> new RuntimeException("keystoneRunQueryService, run not found id=" + runId));
         Map<Integer, KeystoneAffix> affixMap = getAffixMap(List.of(run));
         Map<Integer, PlayableSpecialization> specializationMap = getSpecializationMap(List.of(run));
 

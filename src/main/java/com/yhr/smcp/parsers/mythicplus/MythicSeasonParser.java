@@ -23,7 +23,7 @@ public class MythicSeasonParser {
                 runs.add(keystoneRunParser.parse(run));
             });
 
-            Integer keystoneSeasonId = season.path("season").path("id").asInt();
+            Long keystoneSeasonId = season.path("season").path("id").asLong();
             Double seasonRating = season.path("mythic_rating").path("rating").asDouble();
 
             JsonNode colors = season.path("mythic_rating").path("color");
@@ -41,6 +41,6 @@ public class MythicSeasonParser {
         }
     }
 
-    public record SeasonParserResult(MythicSeason mythicSeason, Integer seasonId, List<KeystoneRun> keystoneRuns) {
+    public record SeasonParserResult(MythicSeason mythicSeason, Long seasonId, List<KeystoneRun> keystoneRuns) {
     }
 }

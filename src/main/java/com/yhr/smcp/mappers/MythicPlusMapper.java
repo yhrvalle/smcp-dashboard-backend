@@ -14,16 +14,16 @@ import java.util.Objects;
 
 public class MythicPlusMapper {
 
-    public static MythicPlusProfileResponseDTO buildMythicPlusProfileDTO(MythicPlusProfile mythicPlusProfile) {
-        return new MythicPlusProfileResponseDTO(
+    public static MythicPlusProfileDTO buildMythicPlusProfileDTO(MythicPlusProfile mythicPlusProfile) {
+        return new MythicPlusProfileDTO(
                 mythicPlusProfile.getId(),
                 mythicPlusProfile.getCurrentMythicRating(),
                 mythicPlusProfile.getRatingColor()
         );
     }
 
-    public static MythicSeasonResponseDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
-        return new MythicSeasonResponseDTO(
+    public static MythicSeasonDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
+        return new MythicSeasonDTO(
                 mythicSeason.getId(),
                 mythicSeason.getSeasonRating(),
                 mythicSeason.getRatingColor(),
@@ -33,9 +33,9 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunResponseDTO buildKeystoneRunDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap) {
+    public static KeystoneRunDTO buildKeystoneRunDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap) {
         List<AffixDTO> affixes = getAffixDTOS(keystoneRun, affixMap);
-        return new KeystoneRunResponseDTO(
+        return new KeystoneRunDTO(
                 keystoneRun.getId(),
                 keystoneRun.getDungeonName(),
                 keystoneRun.getLevel(),
@@ -48,32 +48,24 @@ public class MythicPlusMapper {
         );
     }
 
-    public static KeystoneRunDetailResponseDTO buildKeystoneRunDetailDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap,
-                                                                         Map<Integer, PlayableSpecialization> specMap) {
-        List<AffixDTO> affixes = getAffixDTOS(keystoneRun, affixMap);
-        List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> members = getMembersDTOS(keystoneRun, specMap);
-        return new KeystoneRunDetailResponseDTO(
-                keystoneRun.getId(),
-                keystoneRun.getDungeonName(),
-                keystoneRun.getLevel(),
-                keystoneRun.getDungeonMythicRating(),
-                keystoneRun.getIsTimed(),
-                keystoneRun.getRatingColor(),
-                keystoneRun.getCompletedTimestamp(),
-                keystoneRun.getDuration(),
-                affixes,
+    public static KeystoneRunDetailDTO buildKeystoneRunDetailDTO(KeystoneRun keystoneRun, Map<Integer, KeystoneAffix> affixMap,
+                                                                 Map<Integer, PlayableSpecialization> specMap) {
+        KeystoneRunDTO run = buildKeystoneRunDTO(keystoneRun, affixMap);
+        List<KeystoneRunDetailDTO.KeystoneMembersDTO> members = getMembersDTOS(keystoneRun, specMap);
+        return new KeystoneRunDetailDTO(
+                run,
                 members
         );
     }
 
-    private static @NonNull List<KeystoneRunDetailResponseDTO.KeystoneMembersDTO> getMembersDTOS(KeystoneRun keystoneRun,
-                                                                                                 Map<Integer, PlayableSpecialization> specMap) {
+    private static @NonNull List<KeystoneRunDetailDTO.KeystoneMembersDTO> getMembersDTOS(KeystoneRun keystoneRun,
+                                                                                         Map<Integer, PlayableSpecialization> specMap) {
         return keystoneRun.getMembers().stream()
                 .map(member -> {
                             PlayableSpecialization spec = specMap.get(member.getSpecializationId());
                             String specName = spec != null ? spec.getName() : null;
                             String className = spec != null ? spec.getPlayableClass().getName() : null;
-                            return new KeystoneRunDetailResponseDTO.KeystoneMembersDTO(
+                            return new KeystoneRunDetailDTO.KeystoneMembersDTO(
                                     member.getCharacterName(),
                                     member.getRealm(),
                                     specName,
