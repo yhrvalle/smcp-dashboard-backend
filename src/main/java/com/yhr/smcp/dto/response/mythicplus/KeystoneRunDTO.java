@@ -3,7 +3,7 @@ package com.yhr.smcp.dto.response.mythicplus;
 import java.time.Instant;
 import java.util.List;
 
-public record KeystoneRunResponseDTO(
+public record KeystoneRunDTO(
         Long id,
         String dungeonName,
         Integer level,

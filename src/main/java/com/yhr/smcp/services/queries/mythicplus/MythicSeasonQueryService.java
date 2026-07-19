@@ -5,7 +5,6 @@ import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
 import com.yhr.smcp.mappers.MythicPlusMapper;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.repositories.character.mythicplus.MythicSeasonRepository;
-import com.yhr.smcp.services.character.CharacterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

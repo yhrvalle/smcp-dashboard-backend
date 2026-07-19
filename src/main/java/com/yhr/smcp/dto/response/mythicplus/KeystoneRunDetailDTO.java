@@ -3,16 +3,8 @@ package com.yhr.smcp.dto.response.mythicplus;
 import java.time.Instant;
 import java.util.List;
 
-public record KeystoneRunDetailResponseDTO(
-        Long id,
-        String dungeonName,
-        Integer level,
-        Double dungeonMythicRating,
-        Boolean isTimed,
-        String ratingColorHex,
-        Instant completedTimestamp,
-        Instant duration,
-        List<AffixDTO> affixes,
+public record KeystoneRunDetailDTO(
+        KeystoneRunDTO run,
         List<KeystoneMembersDTO> members
 
 ) {
