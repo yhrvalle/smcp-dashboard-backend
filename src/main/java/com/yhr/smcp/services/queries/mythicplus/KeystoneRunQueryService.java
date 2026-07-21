@@ -29,6 +29,7 @@ public class KeystoneRunQueryService {
     private final PlayableClassDataService playableClassDataService;
 
 
+    //TODO: garantir que a run seja do personagem que está requisitando n todas com o mesmo seasonId (numero da season)
     public Page<KeystoneRunDTO> getRunsBySeason(Long seasonId, Pageable pageable) {
         Page<KeystoneRun> runs = keystoneRunRepository.findByMythicSeasonId(seasonId, pageable);
         Map<Integer, KeystoneAffix> affixMap = getAffixMap(runs.getContent());
