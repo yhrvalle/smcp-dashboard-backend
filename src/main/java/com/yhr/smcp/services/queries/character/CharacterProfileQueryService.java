@@ -6,6 +6,7 @@ import com.yhr.smcp.entities.gamedata.character.PlayableClass;
 import com.yhr.smcp.entities.gamedata.character.PlayableRace;
 import com.yhr.smcp.entities.gamedata.character.PlayableSpecialization;
 import com.yhr.smcp.entities.guild.GuildMember;
+import com.yhr.smcp.exceptions.ResourceNotFoundException;
 import com.yhr.smcp.mappers.CharacterMapper;
 import com.yhr.smcp.repositories.character.CharacterRepository;
 import com.yhr.smcp.services.gamedata.character.PlayableClassDataService;
@@ -24,7 +25,7 @@ public class CharacterProfileQueryService {
 
     public CharacterProfileDTO getCharacterProfile(Long id) {
         CharacterProfile profile = characterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("CharacterProfileQueryService, character " + id + " not found!")
+                .orElseThrow(() -> new ResourceNotFoundException("character id=" + id)
                 );
         String className = getClassName(profile.getGuildMember());
         String raceName = getRaceName(profile.getGuildMember());
@@ -32,12 +33,10 @@ public class CharacterProfileQueryService {
         return CharacterMapper.toCharacterProfileDTO(profile, className, raceName, specName);
     }
 
-    //TODO: pensar se é melhor retornar algo ou só null mesmo
     private String getSpecName(CharacterProfile profile) {
         PlayableSpecialization spec = playableClassDataService.findPlayableSpecializationById(profile.getActiveSpecializationId());
         return spec != null ? spec.getName() : null;
     }
-
 
     private String getClassName(GuildMember guildMember) {
         PlayableClass playableClass = playableClassDataService.findPlayableClassById(guildMember.getClassId());

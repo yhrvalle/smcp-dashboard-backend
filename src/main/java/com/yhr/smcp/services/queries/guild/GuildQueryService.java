@@ -2,6 +2,7 @@ package com.yhr.smcp.services.queries.guild;
 
 import com.yhr.smcp.dto.response.guild.GuildDTO;
 import com.yhr.smcp.entities.guild.Guild;
+import com.yhr.smcp.exceptions.ResourceNotFoundException;
 import com.yhr.smcp.mappers.GuildMapper;
 import com.yhr.smcp.repositories.guild.GuildRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class GuildQueryService {
 
     public GuildDTO getGuild(Long guildId) {
         Guild guild = guildRepository.findById(guildId).orElseThrow(
-                () -> new RuntimeException("GuildQueryService = guild=" + guildId + " not found")
+                () -> new ResourceNotFoundException("guild=" + guildId)
         );
         return GuildMapper.toGuildDTO(guild);
     }
