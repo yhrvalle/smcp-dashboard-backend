@@ -20,6 +20,6 @@ public class Achievements {
     private String name;
     private String description;
     private Integer points;
-
+    private String category;
 
 }
