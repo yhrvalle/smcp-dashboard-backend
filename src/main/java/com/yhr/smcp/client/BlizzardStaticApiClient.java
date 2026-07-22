@@ -56,7 +56,7 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
                 .bodyToMono(String.class);
     }
 
-    public Mono<String> getAchievementDetails(Integer achievementId) {
+    public Mono<String> getAchievementDetails(Long achievementId) {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/achievement/" + achievementId + "?namespace=static-us&locale=en_US")
                 .retrieve()

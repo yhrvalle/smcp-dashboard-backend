@@ -1,4 +1,4 @@
-package com.yhr.smcp.entities.gamedata.achievements;
+package com.yhr.smcp.entities.gamedata.achievement;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
