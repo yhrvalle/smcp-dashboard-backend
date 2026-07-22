@@ -49,6 +49,7 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
     }
 
     // Achievements
+    //TODO: THOSE IS TAKING WAYYYY TO LONG, BC ITS SEQUENTIAL
     public Mono<String> getAchievementIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/achievement/index?namespace=static-us&locale=en_US")

@@ -9,7 +9,7 @@ public class AchievementsParser {
 
     public Achievements parse(JsonNode achieveRoot) {
         Long id = achieveRoot.path("id").asLong();
-        String category = achieveRoot.path("category").asString();
+        String category = achieveRoot.path("category").path("name").asString();
         String name = achieveRoot.path("name").asString();
         String description = achieveRoot.path("description").asString();
         Integer points = achieveRoot.path("points").asInt();
