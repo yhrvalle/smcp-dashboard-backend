@@ -19,7 +19,7 @@ public class RaceDataSyncScheduler {
         long start = System.currentTimeMillis();
         try {
             playableRaceDataService.syncRaces();
-            log.info("classSyncOnStartup: sync finished in {}ms", System.currentTimeMillis() - start);
+            log.info("raceSyncOnStartup: sync finished in {}ms", System.currentTimeMillis() - start);
         } catch (Exception e) {
             log.error("raceSyncOnStartup: startup sync failed");
 
