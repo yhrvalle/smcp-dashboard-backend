@@ -3,7 +3,10 @@ package com.yhr.smcp.client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.PrematureCloseException;
+import reactor.util.retry.Retry;
 
 @Component
 @RequiredArgsConstructor
@@ -49,7 +52,6 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
     }
 
     // Achievements
-    //TODO: THOSE IS TAKING WAYYYY TO LONG, BC ITS SEQUENTIAL
     public Mono<String> getAchievementIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/achievement/index?namespace=static-us&locale=en_US")
@@ -61,6 +63,7 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/achievement/" + achievementId + "?namespace=static-us&locale=en_US")
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .retryWhen(Retry.max(2).filter(e -> e instanceof WebClientRequestException || e.getCause() instanceof PrematureCloseException));
     }
 }
