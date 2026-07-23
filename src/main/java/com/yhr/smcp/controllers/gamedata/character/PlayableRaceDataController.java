@@ -16,6 +16,6 @@ public class PlayableRaceDataController {
     @PostMapping("/sync-races")
     public ResponseEntity<String> syncRaces() {
         playableRaceDataService.syncRaces();
-        return ResponseEntity.ok().build(); //TODO: add some return thing
+        return ResponseEntity.ok().build(); //TODO: add some return msg
     }
 }

@@ -17,7 +17,7 @@ public class PlayableClassDataController {
     @PostMapping("/sync-classes")
     public ResponseEntity<String> syncClasses() {
         playableClassDataService.syncPlayableClasses();
-        return ResponseEntity.ok().build(); //TODO: add some return thing
+        return ResponseEntity.ok().build(); //TODO: add some return msg
     }
 
 

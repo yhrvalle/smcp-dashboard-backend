@@ -3,13 +3,17 @@ package com.yhr.smcp.client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.PrematureCloseException;
+import reactor.util.retry.Retry;
 
 @Component
 @RequiredArgsConstructor
 public class BlizzardStaticApiClient { //TODO: make it parallel
     private final WebClient blizzardWebClient;
 
+    // Class
     public Mono<String> getPlayableClassesIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us&locale=en_US")
@@ -24,6 +28,7 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
                 .bodyToMono(String.class);
     }
 
+    // Affix
     public Mono<String> getAffixIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/keystone-affix/index?namespace=static-us&locale=en_US")
@@ -38,10 +43,27 @@ public class BlizzardStaticApiClient { //TODO: make it parallel
                 .bodyToMono(String.class);
     }
 
+    // Race
     public Mono<String> getRaceIndex() {
         return blizzardWebClient.get()
                 .uri("https://us.api.blizzard.com/data/wow/playable-race/index?namespace=static-us&locale=en_US")
                 .retrieve()
                 .bodyToMono(String.class);
+    }
+
+    // Achievements
+    public Mono<String> getAchievementIndex() {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/achievement/index?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+
+    public Mono<String> getAchievementDetails(Long achievementId) {
+        return blizzardWebClient.get()
+                .uri("https://us.api.blizzard.com/data/wow/achievement/" + achievementId + "?namespace=static-us&locale=en_US")
+                .retrieve()
+                .bodyToMono(String.class)
+                .retryWhen(Retry.max(2).filter(e -> e instanceof WebClientRequestException || e.getCause() instanceof PrematureCloseException));
     }
 }
