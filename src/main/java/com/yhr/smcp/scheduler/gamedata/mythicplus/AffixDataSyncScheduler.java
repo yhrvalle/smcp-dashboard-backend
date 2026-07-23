@@ -16,8 +16,10 @@ public class AffixDataSyncScheduler {
 
     @EventListener(ApplicationReadyEvent.class)
     public void affixSyncOnStartup() {
+        long start = System.currentTimeMillis();
         try {
             keystoneAffixDataService.syncKeystoneAffixes();
+            log.info("affixSyncOnStartup: sync finished in {}ms", System.currentTimeMillis() - start);
         } catch (Exception e) {
             log.error("affixSyncOnStartup: startup sync failed", e);
         }

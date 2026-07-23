@@ -16,8 +16,10 @@ public class ClassDataSyncScheduler {
 
     @EventListener(ApplicationReadyEvent.class)
     public void classSyncOnStartup() {
+        long start = System.currentTimeMillis();
         try {
             playableClassDataService.syncPlayableClasses();
+            log.info("classSyncOnStartup: sync finished in {}ms", System.currentTimeMillis() - start);
 
         } catch (Exception e) {
             log.error("classSyncOnStartup: startup sync failed", e);

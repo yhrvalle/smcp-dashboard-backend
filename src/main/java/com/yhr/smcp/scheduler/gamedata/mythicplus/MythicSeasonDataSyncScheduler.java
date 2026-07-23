@@ -16,8 +16,10 @@ public class MythicSeasonDataSyncScheduler {
 
     @EventListener(ApplicationReadyEvent.class)
     public void mythicSeasonSyncOnStartup() {
+        long start = System.currentTimeMillis();
         try {
             keystoneSeasonDataService.syncMythicSeasons();
+            log.info("mythicSeasonSyncOnStartup: sync finished in {}ms", System.currentTimeMillis() - start);
 
         } catch (Exception e) {
             log.error("mythicSeasonSyncOnStartup: startup sync failed", e);

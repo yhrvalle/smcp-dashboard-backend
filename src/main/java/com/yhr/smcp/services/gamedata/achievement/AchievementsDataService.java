@@ -15,9 +15,7 @@ import reactor.core.publisher.Mono;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hibernate.Hibernate.map;
 
@@ -34,10 +32,12 @@ public class AchievementsDataService {
     public void syncAchievements() {
         String rawJson = fetchAchievementsIndex();
         JsonNode indexRoot = objectMapper.readTree(rawJson);
+        Set<Long> existingIds = new HashSet<>(achievementRepository.findAllIds());
+
         List<Long> ids = new ArrayList<>();
         indexRoot.path("achievements").forEach(achieveNode -> {
             Long achieveId = achieveNode.path("id").asLong();
-            if (!achievementRepository.existsById(achieveId)) {
+            if (!existingIds.contains(achieveId)) {
                 ids.add(achieveId);
             }
         });
@@ -61,7 +61,7 @@ public class AchievementsDataService {
             throw new BlizzardSyncException("failed to fetch achievements indexes", e);
         }
     }
-    
+
     private void saveAchievement(Long id, String rawJson) {
         try {
             JsonNode indexRoot = objectMapper.readTree(rawJson);
