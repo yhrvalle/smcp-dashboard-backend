@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class BlizzardProfileApiClient { //TODO: make it parallel
+public class BlizzardProfileApiClient {
     private final WebClient blizzardWebClient;
 
     public Mono<String> getGuild(String realm, String guildSlug) {

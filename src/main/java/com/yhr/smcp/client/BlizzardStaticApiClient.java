@@ -10,7 +10,7 @@ import reactor.util.retry.Retry;
 
 @Component
 @RequiredArgsConstructor
-public class BlizzardStaticApiClient { //TODO: make it parallel
+public class BlizzardStaticApiClient {
     private final WebClient blizzardWebClient;
 
     // Class
