@@ -51,8 +51,8 @@ public class PlayableClassDataService {
                             log.error("failed to fetch playable class for class id={}", id, e);
                             return Mono.empty();
                         }), 20)
-                .doOnNext(playableClass -> {
-                    savePlayableClass(playableClass.getKey(), playableClass.getValue());
+                .doOnNext(classMap -> {
+                    savePlayableClass(classMap.getKey(), classMap.getValue());
                 })
                 .blockLast();
 
