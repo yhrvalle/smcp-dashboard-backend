@@ -45,7 +45,7 @@ public class PlayableClassDataService {
             }
         });
         Flux.fromIterable(ids)
-                .flatMap(id -> blizzardStaticApiClient.getPlayableClass(id)
+                .flatMap(id -> blizzardStaticApiClient.getPlayableClassDetails(id)
                         .map(json -> Map.entry(id, json))
                         .onErrorResume(e -> {
                             log.error("failed to fetch playable class for class id={}", id, e);
