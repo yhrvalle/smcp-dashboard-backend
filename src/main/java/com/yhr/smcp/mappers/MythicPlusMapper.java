@@ -24,7 +24,7 @@ public class MythicPlusMapper {
 
     public static MythicSeasonDTO buildMythicSeasonDTO(MythicSeason mythicSeason) {
         return new MythicSeasonDTO(
-                mythicSeason.getId(),
+                mythicSeason.getKeystoneSeason().getId(),
                 mythicSeason.getSeasonRating(),
                 mythicSeason.getRatingColor(),
                 mythicSeason.getKeystoneSeason().getName(),

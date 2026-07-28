@@ -13,7 +13,7 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class BlizzardStaticApiClient {
-    private static final Retry RETRY_SPEC = Retry.backoff(3, Duration.ofSeconds(Duration.ofSeconds(1)))
+    private static final Retry RETRY_SPEC = Retry.backoff(3, Duration.ofSeconds((1)))
             .maxBackoff(Duration.ofSeconds(10))
             .filter(e -> e instanceof WebClientResponseException.TooManyRequests
                     || e.getCause() instanceof PrematureCloseException);
