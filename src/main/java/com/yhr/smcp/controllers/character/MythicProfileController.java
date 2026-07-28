@@ -45,6 +45,7 @@ public class MythicProfileController {
     }
 
     @GetMapping("/{id}/season/{seasonId}/runs/{runId}")
+    // esse endpoint nao checa de quem é a run, so precisa saber do id
     public ResponseEntity<KeystoneRunDetailDTO> getKeystoneRunDetail(@PathVariable Long id, @PathVariable Long seasonId, @PathVariable Long runId) {
         return ResponseEntity.ok(keystoneRunQueryService.getRunDetailById(runId));
     }

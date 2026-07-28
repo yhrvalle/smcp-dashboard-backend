@@ -4,6 +4,7 @@ import com.yhr.smcp.client.BlizzardProfileApiClient;
 import com.yhr.smcp.entities.character.mythicplus.KeystoneRun;
 import com.yhr.smcp.entities.character.mythicplus.MythicPlusProfile;
 import com.yhr.smcp.entities.character.mythicplus.MythicSeason;
+import com.yhr.smcp.entities.gamedata.mythicplus.KeystoneSeason;
 import com.yhr.smcp.exceptions.BlizzardParsingException;
 import com.yhr.smcp.exceptions.BlizzardSyncException;
 import com.yhr.smcp.parsers.mythicplus.MythicPlusProfileParser;
@@ -24,6 +25,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -105,7 +107,12 @@ public class MythicPlusService {
                         .orElseGet(MythicSeason::new);
 
                 season.setProfile(profile);
-                season.setKeystoneSeason(keystoneSeasonDataService.getReferenceById(result.seasonId()));
+                Optional<KeystoneSeason> keystoneSeason = keystoneSeasonDataService.getReferenceById(result.seasonId());
+                if (keystoneSeason.isEmpty()) { // por algum moitivo a blizzard tem season 0 e n tem no endpoint de game data
+                    log.warn("keystone season not found, skipping season id={} for profile id={}", result.seasonId(), profile.getId());
+                    continue;
+                }
+                season.setKeystoneSeason(keystoneSeason.get());
                 season.setSeasonRating(result.mythicSeason().getSeasonRating());
                 season.setRatingColor(result.mythicSeason().getRatingColor());
                 season = mythicSeasonRepository.save(season);

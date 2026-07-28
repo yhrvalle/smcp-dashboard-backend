@@ -48,8 +48,8 @@ public class KeystoneSeasonDataService {
                 .blockLast();
     }
 
-    public KeystoneSeason getReferenceById(Long seasonId) {
-        return keystoneSeasonsRepository.findById(seasonId).orElse(null);
+    public Optional<KeystoneSeason> getReferenceById(Long seasonId) {
+        return keystoneSeasonsRepository.findById(seasonId);
     }
 
     private String fetchSeasonIndex() {
