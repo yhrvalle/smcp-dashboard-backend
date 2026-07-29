@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/character/mythicplus")
 @RequiredArgsConstructor
-public class MythicProfileController {
+public class MythicProfileController { //TODO: fazer as parada vir só do boneco que está requisitando
     private final MythicPlusProfileQueryService mythicPlusProfileQueryService;
     private final MythicSeasonQueryService mythicSeasonQueryService;
     private final KeystoneRunQueryService keystoneRunQueryService;
@@ -38,15 +38,20 @@ public class MythicProfileController {
     }
 
     @GetMapping("/{id}/season/{seasonId}/runs")
-    public ResponseEntity<Page<KeystoneRunDTO>> getKeystoneRuns(@PathVariable Long id, @PathVariable Long seasonId, Pageable pageable) {
+    public ResponseEntity<Page<KeystoneRunDTO>> getKeystoneRuns(
+            @PathVariable Long id, @PathVariable Long seasonId, Pageable pageable) {
         MythicSeasonDTO season = mythicSeasonQueryService.getCharacterMythicSeason(id, seasonId);
         Page<KeystoneRunDTO> runs = keystoneRunQueryService.getRunsBySeason(season.id(), pageable);
         return ResponseEntity.ok(runs);
     }
 
+
     @GetMapping("/{id}/season/{seasonId}/runs/{runId}")
-    public ResponseEntity<KeystoneRunDetailDTO> getKeystoneRunDetail(@PathVariable Long id, @PathVariable Long seasonId, @PathVariable Long runId) {
-        return ResponseEntity.ok(keystoneRunQueryService.getRunDetailById(runId));
+    public ResponseEntity<KeystoneRunDetailDTO> getKeystoneRunDetail(
+            @PathVariable Long id, @PathVariable Long seasonId, @PathVariable Long runId) {
+        MythicSeasonDTO season = mythicSeasonQueryService.getCharacterMythicSeason(id, seasonId);
+        KeystoneRunDetailDTO run = keystoneRunQueryService.getRunDetailById(season.id(), runId);
+        return ResponseEntity.ok(run);
     }
 
 }

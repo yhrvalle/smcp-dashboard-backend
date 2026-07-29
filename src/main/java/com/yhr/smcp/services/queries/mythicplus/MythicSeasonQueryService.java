@@ -21,12 +21,12 @@ public class MythicSeasonQueryService {
         return mythicSeasonRepository.findByProfileId(profileId, pageable)
                 .map(MythicPlusMapper::buildMythicSeasonDTO);
     }
-    
+
     public MythicSeasonDTO getCharacterMythicSeason(Long id, Long seasonId) {
         Long profileId = characterRepository.findMythicPlusProfileIdById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("characterId=" + id));
         MythicSeason season = mythicSeasonRepository.findByProfileIdAndKeystoneSeasonId(profileId, seasonId)
-                .orElseThrow(() -> new ResourceNotFoundException("seasonId" + id));
+                .orElseThrow(() -> new ResourceNotFoundException("seasonId=" + seasonId));
         return MythicPlusMapper.buildMythicSeasonDTO(season);
     }
 }
