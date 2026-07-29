@@ -37,8 +37,11 @@ public class KeystoneRunQueryService {
         return runs.map(run -> MythicPlusMapper.buildKeystoneRunDTO(run, affixMap));
     }
 
-    public KeystoneRunDetailDTO getRunDetailById(Long runId) {
+    public KeystoneRunDetailDTO getRunDetailById(Long seasonId, Long runId) {
         KeystoneRun run = keystoneRunRepository.findById(runId).orElseThrow(() -> new ResourceNotFoundException("id=" + runId));
+        if (!run.getMythicSeason().getId().equals(seasonId)) {
+            throw new ResourceNotFoundException("run id=" + runId + " does not belong to season id=" + seasonId);
+        }
         Map<Integer, KeystoneAffix> affixMap = getAffixMap(List.of(run));
         Map<Integer, PlayableSpecialization> specializationMap = getSpecializationMap(List.of(run));
 
