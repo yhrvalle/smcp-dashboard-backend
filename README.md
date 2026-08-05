@@ -33,10 +33,6 @@ Entity relationships favor direct foreign keys over bidirectional `@OneToMany` c
 
 
 ## Roadmap
- 
-- **Spring Security:** protect the API's own write endpoints (sync), distinct from the OAuth2 authentication already in place for consuming the Blizzard API.
-- **Sync reconciliation:** re-syncing a character can currently duplicate existing seasons and runs; a comparison mechanism is needed before writes.
-- **Parallelism and async processing:** guild roster sync is currently sequential and blocking; the goal is to parallelize per-member calls and decouple heavy processing from the HTTP request lifecycle.
 - **CI/CD:** automated build and test pipeline via GitHub Actions or Jenkins
 - **Code quality:** SonarQube or SonarLint integration for continuous static analysis.
 - **Frontend:** an Angular application consuming this API.
