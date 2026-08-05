@@ -33,7 +33,9 @@ Entity relationships favor direct foreign keys over bidirectional `@OneToMany` c
 
 
 ## Roadmap
+- Automated Tests with JUnit and Mockito
 - **CI/CD:** automated build and test pipeline via GitHub Actions or Jenkins
+- Integrated tests with TestContainers (CI/CD Pipeline)
 - **Code quality:** SonarQube or SonarLint integration for continuous static analysis.
 - **Frontend:** an Angular application consuming this API.
 
