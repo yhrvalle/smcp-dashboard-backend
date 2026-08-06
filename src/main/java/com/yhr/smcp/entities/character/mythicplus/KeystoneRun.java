@@ -32,9 +32,11 @@ public class KeystoneRun {
     private Instant duration;
     private Integer level;
 
+    @Builder.Default
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Integer> affixIds = new ArrayList<>();
-
+    
+    @Builder.Default
     @JdbcTypeCode(SqlTypes.JSON)
     private List<KeystoneMember> members = new ArrayList<KeystoneMember>();
 

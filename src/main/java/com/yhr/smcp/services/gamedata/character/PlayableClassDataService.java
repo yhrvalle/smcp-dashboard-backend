@@ -9,6 +9,7 @@ import com.yhr.smcp.parsers.gamedata.character.PlayableClassesParser;
 import com.yhr.smcp.parsers.gamedata.character.PlayableSpecializationsParser;
 import com.yhr.smcp.repositories.gamedata.character.PlayableClassRepository;
 import com.yhr.smcp.repositories.gamedata.character.PlayableSpecializationRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
