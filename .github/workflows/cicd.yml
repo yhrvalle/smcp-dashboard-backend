@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: project checkout
+        uses: actions/checkout@v4
+
+      - name: java 25 setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: compile
+        run: ./mvnw -B compile
+
+      - name: unit tests
+        run: ./mvnw -B test
+
